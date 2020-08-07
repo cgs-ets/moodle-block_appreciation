@@ -1,0 +1,55 @@
+
+/* The recipient field is a text field hidden by css rather than a hidden field so that we can attach validation to it. */
+#fitem_id_recipient {
+    display: none;
+}
+#fitem_id_recipient>div{
+    display: none;
+}
+#fitem_id_recipient.has-danger {
+    display: block;
+    height: 22px;
+    overflow: hidden;
+}
+#fitem_id_recipient.has-danger:before {
+    content: "You must select a recipient.";
+    color: red;
+    width: 100%;
+    height: 22px;
+    margin-left: 15px;
+}
+
+ /* Recipient selector */
+.recipient-selector .recipient-selection {
+    margin-bottom: 8px;
+    overflow: hidden;
+}
+.recipient-selector .recipient-tag {
+    background: #deeaff;
+    padding: 8px 12px;
+    font-weight: 800;
+    display: inline-block;
+    cursor: pointer;
+}
+.recipient-selector .recipient-autocomplete {
+    max-width: 500px;
+    background-color: #fff;
+}
+.recipient-selector .recipient-results {
+    display: none;
+    max-width: 500px;
+    padding: 3px 0;
+    border: 1px solid #ccc;
+    border-top: 0 none;
+}
+.recipient-selector .recipient-results.active {
+    display: block;
+}
+.recipient-selector .recipient-result {
+    display: block;
+    padding: 3px 11px;
+    cursor: pointer;
+}
+.recipient-selector .recipient-result:hover {
+    background: #f2f2f2;
+}

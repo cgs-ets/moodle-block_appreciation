@@ -1,0 +1,123 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+    @package   block_appreciation
+    @copyright 2020 Michael Vangelovski <michael.vangelovski@hotmail.com>
+    @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+}}
+{{!
+    @template block_appreciation/announcement
+
+    Renders a single announcement.
+}}
+
+<div data-id="{{id}}" class="announcement{{^isavailable}} unavailable{{/isavailable}}{{#ismodpending}} modpending{{/ismodpending}}{{#ismodrejected}} modrejected{{/ismodrejected}}{{#islong}} long-message{{/islong}}">
+    <div class="header">
+        <div class="leftwrap">
+            <div class="subject">{{subject}}</div>
+            {{#impersonate}}{{#iscreator}}
+                <div class="impersonatedby">
+                    <div class="userphoto"><a href="{{impersonatedbyurl}}" title="{{impersonatedbyfullname}} profile"><img src="{{impersonatedbyphoto}}" alt="{{impersonatedbyfullname}}" title="{{impersonatedbyfullname}}" /></a></div>
+                    <span>Impersonated by {{impersonatedbyfullname}}</span>
+                </div>
+            {{/iscreator}}{{/impersonate}}
+            <div class="userphoto"><a href="{{authorurl}}" title="{{authorfullname}} profile"><img src="{{authorphoto}}" alt="{{authorfullname}}" title="{{authorfullname}}" /></a></div>
+            <div class="author">
+                {{authorfullname}}
+                {{#authorjobpositions}}
+                    <div class="jobpositions">
+                        {{authorjobpositions}}
+                    </div>
+                {{/authorjobpositions}}
+            </div>
+        </div>
+        <div class="rightwrap">
+            <div class="meta">
+                <div class="time">{{readabletime}}</div>
+                <div class="audiences hastip">
+                    <i class="fa fa-users" aria-hidden="true"></i>
+                    <div class="tip">
+                        <span class="comma-list">
+                            {{#audiences}}
+                                {{#conditions}}<span>{{#url}}<a href="{{url}}">{{name}}</a>{{/url}}{{^url}}{{name}}{{/url}}</span>{{/conditions}}
+                            {{/audiences}}
+                        </span>
+                    </div>
+                </div>
+                {{#iscreator}}
+                    {{#deliverystatus}}
+                        <div class="delivery hastip {{deliverystatus}}">
+                            {{{deliveryicon}}}
+                            <div class="tip">
+                                <span>{{deliverymessage}}</span>
+                            </div>
+                        </div>
+                    {{/deliverystatus}}
+                {{/iscreator}}
+            </div>
+            {{#iscreator}}
+                <div class="actions">
+                    <div class="dropdown">
+                        <button class="btn{{#ishome}} btn-secondary{{/ishome}} actions-dropdown" type="button" id="actions-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></button>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="actions-dropdown">
+                            <a class="dropdown-item action-edit" href="{{config.wwwroot}}/local/announcements/post.php?edit={{id}}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item action-viewusers" href="#"><i class="fa fa-users" aria-hidden="true"></i> Recipients</a>
+                            <a class="dropdown-item action-popout" target="_blank" href="{{viewurl}}"><i class="fa fa-external-link" aria-hidden="true"></i> Pop out</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item action-delete" href="#"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</a>
+                        </div>
+                    </div>
+                </div>
+            {{/iscreator}}
+            {{^iscreator}}
+                {{#canaudit}}
+                    <div class="actions">
+                        <div class="dropdown">
+                            <button class="btn{{#ishome}} btn-secondary{{/ishome}} actions-dropdown" type="button" id="actions-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></button>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="actions-dropdown">
+                                <a class="dropdown-item action-viewusers" href="#"><i class="fa fa-users" aria-hidden="true"></i> Recipients</a>
+                                <a class="dropdown-item action-popout" target="_blank" href="{{viewurl}}"><i class="fa fa-external-link" aria-hidden="true"></i> Pop out</a>
+                            </div>
+                        </div>
+                    </div>
+                {{/canaudit}}
+            {{/iscreator}}
+
+        </div>
+        <div class="clear"></div>
+
+    </div>
+
+    {{^isavailable}}<div class="note availability">{{#str}} list:announcementunavailable, block_appreciation {{/str}}</div>{{/isavailable}}
+    {{#ismodpending}}<div class="note moderationstatus">{{#str}} list:announcementmodpending, block_appreciation, {{#modinfo}}{{moduserfullname}}{{/modinfo}} {{/str}}</div>{{/ismodpending}}
+    {{#ismodrejected}}<div class="note moderationstatus">{{#str}} list:announcementmodrejected, block_appreciation, {{#modinfo}}{{actioneduserfullname}}{{/modinfo}} {{/str}}</div>{{/ismodrejected}}
+
+    <div class="message">
+        {{{shortmessage}}}
+        <span class="loader"><span class="circle spin"></span></span>
+    </div>
+    {{#formattedattachments.0}}
+        <div class="attachments">
+            Attachments:
+            <ul class="comma-list">
+            {{#formattedattachments}}
+                <li><a target="_blank" href="{{path}}">{{{iconimage}}} {{filename}}</a></li>
+            {{/formattedattachments}}
+            </ul>
+        </div>
+    {{/formattedattachments.0}}
+</div>
