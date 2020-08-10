@@ -24,11 +24,14 @@
  */
 // Include required files and classes.
 require_once('../../config.php');
+require_once($CFG->dirroot . '/blocks/appreciation/locallib.php');
 use \block_appreciation\forms\form_post;
 use \block_appreciation\persistents\thankyou;
 
 $instanceid = required_param('instanceid', PARAM_INT);
 $courseid   = required_param('courseid', PARAM_INT);
+$page = optional_param('page', 0, PARAM_INT);
+$status = optional_param('status', '', PARAM_TEXT);
 
 // Determine course and context.
 $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
@@ -42,15 +45,14 @@ $blockcontext = context_block::instance($instanceid);
 // Set up page parameters.
 $PAGE->set_course($course);
 $PAGE->requires->css('/blocks/appreciation/styles.css');
-$PAGE->set_url(
-    '/blocks/appreciation/view.php',
-    array(
-        'instanceid' => $instanceid,
-        'courseid' => $courseid,
-    )
-);
+$pageurl = new moodle_url('/blocks/appreciation/view.php', array(
+    'instanceid' => $instanceid,
+    'courseid' => $courseid,
+    'page' => $page,
+));
+$PAGE->set_url($pageurl);
 $PAGE->set_context($coursecontext);
-$title = get_string('view', 'block_appreciation');
+$title = get_string('title', 'block_appreciation');
 $PAGE->set_title($title);
 $PAGE->set_heading($title);
 $PAGE->navbar->add($title);
@@ -62,9 +64,43 @@ require_capability('block/appreciation:view', $blockcontext);
 // Add css.
 $PAGE->requires->css(new moodle_url($CFG->wwwroot . '/blocks/appreciation/styles.css', array('nocache' => rand().rand())));
 
+//Get the unapproved url
+$isapprover = ($USER->username == $blockconfig->approver);
+$unapprovedurl = clone $pageurl;
+$unapprovedurl->param('status', 'unapproved');
+$numunapproved = thankyou::count_records(['instanceid' => $instanceid, 'approved' => 0, 'deleted' => 0]);
+
+ // Get the thank yous.
+$thankyous = array();
+if ($status == 'unapproved') {
+    if ($isapprover) {
+        $thankyous = thankyou::get_for_approval($instanceid, $page);
+    }
+} else {
+    $thankyous = thankyou::get_for_user($instanceid, $isapprover, $page);
+}
+
+// Build the output.
 echo $OUTPUT->header();
 
-//echo $OUTPUT->render_from_template('block_appreciation/loadingoverlay', array('class' => 'lann-post-overlay'));
+// Export the announcements list.
+$relateds = [
+	'posts' => $thankyous,
+    'page' => $page,
+    'isapprover' => $isapprover,
+];
+
+$list = new block_appreciation\external\list_exporter(null, $relateds);
+$data = array(
+    'instanceid' => $instanceid,
+	'list' => $list->export($OUTPUT),
+    'isapprover' => $isapprover,
+    'numunapproved' => $numunapproved,
+    'unapprovedurl' => $unapprovedurl->out(false),
+);
+
+// Render the appreciation list.
+echo $OUTPUT->render_from_template('block_appreciation/view', $data);
 
 // Add scripts.
 //$PAGE->requires->js_call_amd('block_appreciation/content', 'init', array('instanceid' => $instanceid));

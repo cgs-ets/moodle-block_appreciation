@@ -53,3 +53,89 @@
 .recipient-selector .recipient-result:hover {
     background: #f2f2f2;
 }
+
+
+/* list */
+.block_appreciation .bapp-header {
+    text-align: right;
+}
+.block_appreciation .bapp-list {
+    margin-top: 20px;
+}
+.block_appreciation .bapp-list .post {
+    margin-bottom: 20px;
+    box-shadow: 2px 2px 2px 0px #e4e6e8;
+    background-color: #fff;
+    color: #000;
+    position: relative;
+    border: 1px solid #ddd;
+}
+.block_appreciation .bapp-list .post.unapproved {
+    background-color: #f8dec4;
+}
+.block_appreciation .bapp-list .post.unapproved .header {
+    border-bottom: 1px solid #bcbcbc;
+}
+.block_appreciation .bapp-list .post .note {
+    font-style: italic;
+    font-size: 13px;
+    padding: 6px 15px 0;
+}
+.block_appreciation .bapp-list .post .header {
+    position: relative;
+    width: 100%;
+    border-bottom: 1px solid #e4e6e8;
+    padding: 10px 15px;
+}
+.block_appreciation .bapp-list .post .creator,
+.block_appreciation .bapp-list .post .seperator,
+.block_appreciation .bapp-list .post .recipient {
+    display: inline-block;
+}
+.block_appreciation .bapp-list .post .header .fullname {
+    white-space: nowrap;
+    overflow: hidden;
+}
+.block_appreciation .bapp-list .post .creator .fullname:after {
+    content: "▸";
+    margin-left: 10px;
+    margin-right: 10px;
+    color: #676767;
+}
+.block_appreciation .bapp-list .post .header .meta {
+    font-size: 11px;
+    float: right;
+    text-align: right;
+}
+.block_appreciation .bapp-list .post .header .meta .option:after {
+    content: "•";
+    color: #777;
+    margin: 0 5px;
+}
+.block_appreciation .bapp-list .post .header .meta .option:last-of-type:after {
+    content: "";
+}
+.block_appreciation .bapp-list .post .userphoto {
+    position: relative;
+    border-radius: 50%;
+    overflow: hidden;
+    float: left;
+    margin-right: 10px;
+    width: 25px;
+    height: 25px;
+    border: 0 none;
+}
+.block_appreciation .bapp-list .post .userphoto img {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.block_appreciation .bapp-list .post .message {
+    padding: 10px 15px;
+    overflow: hidden;
+}
+
+.block_appreciation .bapp-list .post .message p:last-of-type {
+    margin-bottom: 0;
+}

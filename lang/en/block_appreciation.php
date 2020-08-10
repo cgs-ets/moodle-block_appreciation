@@ -32,6 +32,9 @@ $string['viewmore'] = 'View more';
 $string['add'] = 'Add';
 $string['config:displaynum'] = 'Display number';
 $string['config:displaynumdesc'] = 'Number of most recent posts to display';
+$string['config:approver'] = 'Approver';
+$string['config:approverdesc'] = 'Username of the person in the course that will be approving posts.';
+
 
 $string['postform:postaddedsuccess'] = 'Your message was successfully added.';
 $string['postform:postthankyou'] = 'Post a thank you';
@@ -39,3 +42,9 @@ $string['postform:message'] = 'Message';
 $string['postform:recipient'] = 'Recipient';
 $string['postform:recipientplaceholder'] = 'Search by name';
 $string['postform:recipientnoselection'] = 'No selection.';
+
+$string['addnew'] = 'Add new';
+$string['viewunapproved'] = 'View {$a} unapproved';
+
+$string['list:postunapproved'] = 'This post is not visible to users because approval is pending.';
+$string['list:nothankyous'] = "No posts have been made.";

@@ -62,7 +62,7 @@ trait get_recipient_users {
     public static function get_recipient_users($instanceid, $query) {
         self::validate_parameters(self::get_recipient_users_parameters(), compact('instanceid', 'query'));
         
-        $results = self::search_recipient_users($query);
+        $results = self::search_recipient_users($instanceid, $query);
 
         $users = array();
         foreach ($results as $user) {
@@ -100,15 +100,32 @@ trait get_recipient_users {
     * @param string $query. The search query.
     * @return array of user objects.
     */
-    private static function search_recipient_users($query) {
+    private static function search_recipient_users($instanceid, $query) {
         global $DB, $USER;
 
+        // Get the courseid based on the block instanceid.
+        $sql = "SELECT c.instanceid
+                FROM {context} c, {block_instances} b
+                WHERE b.id = ?
+                AND c.id = b.parentcontextid";
+        $params = array($instanceid);
+        $courseid = $DB->get_field_sql($sql, $params);
+        if (empty($courseid)) {
+            return [];
+        }
+
+        // Ensure that the user is enrolled in the course.
+        $context = \context_course::instance($courseid);
+        if (!is_enrolled($context, $USER->id, '', true)) {
+            return [];
+        }
+
+        // Search for users within course.
         $sql = "SELECT u.*
-                FROM {user} u
-                INNER JOIN {user_info_data} d ON d.userid = u.id
-                INNER JOIN {user_info_field} f ON d.fieldid = f.id
-                WHERE f.shortname = 'CampusRoles'
-                AND LOWER(d.data) LIKE ? 
+                FROM {user} u, {user_enrolments} ue, {enrol} e
+                WHERE e.courseid = ?
+                AND ue.enrolid = e.id
+                AND u.id = ue.userid
                 AND (
                     LOWER(u.firstname) LIKE ? OR 
                     LOWER(u.lastname) LIKE ? OR
@@ -116,7 +133,7 @@ trait get_recipient_users {
                     ? LIKE CONCAT('%',LOWER(u.lastname),'%')
                 )";
         $params = array(
-            '%staff%',
+            $courseid,
             '%'.$DB->sql_like_escape(strtolower($query)).'%',
             '%'.$DB->sql_like_escape(strtolower($query)).'%',
             strtolower($query),

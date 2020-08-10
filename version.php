@@ -25,7 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2020041503;
+$plugin->version = 2020041504;
 $plugin->requires = 2010121000;
 $plugin->component = 'block_appreciation';
 $plugin->maturity = MATURITY_BETA;

@@ -92,8 +92,10 @@ class block_appreciation extends block_base {
         }
 
         // Get the thankyou posts.
-
-        $displaynum = $this->config->displaynum;
+        $displaynum = 10;
+        if (isset($this->config->displaynum)) {
+            $displaynum = $this->config->displaynum;
+        }
 
         // Fetch the thankyou posts.
         

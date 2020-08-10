@@ -30,14 +30,20 @@ class block_appreciation_edit_form extends block_edit_form
         // Display num.
         $type = 'text';
         $name = 'config_displaynum';
-        $title = get_string('config:displaynumdesc', 'block_appreciation');
-        $mform->addElement($type, $name, $title);
+        $title = get_string('config:displaynum', 'block_appreciation');
+        $desc = get_string('config:displaynumdesc', 'block_appreciation');
+        $mform->addElement($type, $name, $title, $desc);
         $mform->setType('config_displaynum', PARAM_INT);
         $mform->addRule('config_displaynum', get_string('err_numeric', 'form'), 'numeric', null, 'client');
 
 
         // Approver.
-        
+        $type = 'text';
+        $name = 'config_approver';
+        $title = get_string('config:approver', 'block_appreciation');
+        $desc = get_string('config:approverdesc', 'block_appreciation');
+        $mform->addElement($type, $name, $title, $desc);
+        $mform->setType('config_approver', PARAM_RAW);
     }
 
 }

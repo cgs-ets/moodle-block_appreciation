@@ -25,6 +25,8 @@ namespace block_appreciation\persistents;
 
 defined('MOODLE_INTERNAL') || die();
 
+require_once($CFG->dirroot . '/blocks/appreciation/locallib.php');
+use \block_appreciation\persistents\thankyou;
 use \core\persistent;
 use \core_user;
 use \context_user;
@@ -77,129 +79,74 @@ class thankyou extends persistent {
     }
 
     /**
-    * Saves the record to the database.
-    * 
-    * @param stdClass $data. 
-    * @return int|bool $id. ID of announcement or false if failed to create.
-    */
-    /*public static function save_from_data($data) {
+     * Get appreciation posts.
+     *
+     * @param string $instanceid. The block instance id.
+     * @param int $page.
+     * @return array.
+     */
+    public static function get_for_user($instanceid, $isapprover = 0, $page = 0) {
         global $DB, $USER;
 
-        $edit = false;
-        if ($id > 0) {
-            // Make sure the record actually exists.
-            if (!static::record_exists($id)) {
-                return false;
-            }
-            $edit = true;
+        $perpage = APPRECIATION_PERPAGE;
+        $from = $perpage*$page;
+
+        $params = array();
+        $sql = "SELECT *
+                   FROM {block_appreciation_posts}
+                  WHERE instanceid = ? 
+                    AND deleted = 0 ";
+        $params[] = $instanceid;
+
+        if (!$isapprover) {
+            $sql .= " AND (approved = 1 OR creator = ?) ";
+            $params[] = $USER->username;
         }
 
-        // Before creating anything, validate the audiences.
-        $tags = json_decode($data->audiencesjson);
-        if (!static::is_audiences_valid($tags)) {
-            return false;
+        $sql .= " ORDER BY timemodified DESC";
+        
+        $posts = array();
+        $recordset = $DB->get_recordset_sql($sql, $params, $from, $perpage);
+        foreach ($recordset as $record) {
+            $posts[] = new static(0, $record);
         }
+        $recordset->close();
+     
+        return $posts;
+    }
 
-        // Load or create new instance, depending on $id.
-        $announcement = new static($id);
 
-        if ($edit) {
-            // Editing an announcement.
-            // Should the announcement be resent in the next digest.
-            if ($data->remail) {
-                $announcement->set('mailed', 0);
-            }
-            // If the announcement is edited by the creator then update the impersonate field.
-            // If the impersonated user edits the announcement, do not change the impersonate field.
-            if ($announcement->get('authorusername') == $USER->username) {
-                $announcement->set('impersonate', $data->impersonate);
-            }
-        } else {
-            // New announcement, set author to current user.
-            $announcement->set('authorusername', $USER->username);
-            // Set the impersonated user. When editing a different set of rules apply for this field.
-            $announcement->set('impersonate', $data->impersonate);
+    /**
+     * Get appreciation posts that need approval.
+     *
+     * @param string $instanceid. The block instance id.
+     * @param int $page.
+     * @return array.
+     */
+    public static function get_for_approval($instanceid, $page = 0) {
+        global $DB, $USER;
+
+        $perpage = APPRECIATION_PERPAGE;
+        $from = $perpage*$page;
+
+        $sql = "SELECT *
+                   FROM {block_appreciation_posts}
+                  WHERE instanceid = ? 
+                    AND deleted = 0
+                    AND approved = 0
+               ORDER BY timemodified DESC";
+
+        $params = array($instanceid, $USER->username);
+        $posts = array();
+        $recordset = $DB->get_recordset_sql($sql, $params, $from, $perpage);
+        foreach ($recordset as $record) {
+            $posts[] = new static(0, $record);
         }
+        $recordset->close();
+     
+        return $posts;
 
-        // An author can't impersonate themselves.
-        if ($announcement->get('authorusername') == $data->impersonate) {
-            $announcement->set('impersonate', '');
-        }
-
-        // Check that the author can actually impersonate the selected user.
-        if ($data->impersonate) {
-            $impersonator = core_user::get_user_by_username($announcement->get('authorusername'));
-            if (!can_impersonate_user($impersonator, $data->impersonate)) {
-                $announcement->set('impersonate', '');
-            }
-        }
-
-        // Set/update the data.
-        $announcement->set('timeedited', time());
-        $announcement->set('subject', $data->subject);
-        $announcement->set('message', '');
-        $announcement->set('messageformat', $data->messageformat);
-        $announcement->set('messagetrust', $data->messagetrust);
-        $announcement->set('timestart', $data->timestart);
-        $announcement->set('timeend', $data->timeend);
-        $announcement->set('audiencesjson', $data->audiencesjson);
-        $announcement->set('forcesend', $data->forcesend);
-        $announcement->set('attachment', 0);
-        $announcement->set('notified', 0);
-        // No moderation set initially. Moderation requirements processed below.
-        $announcement->set('modrequired', ANN_MOD_REQUIRED_NO);
-        $announcement->set('modstatus', ANN_MOD_STATUS_PENDING);
-        // Set savecomplete flag to false until all audiences and users are saved so 
-        // that the plugin does not attempt to mail the plugin until everything is saved.
-        $announcement->set('savecomplete', 0);
-
-        // Update the persistent with the added details.
-        $announcement->save();
-        $id = $announcement->get('id');
-
-        // Store message files to a permanent file area.
-        $context = \context_system::instance();
-        $message = file_save_draft_area_files(
-            $data->itemid, 
-            $context->id, 
-            'block_appreciation', 
-            'announcement', 
-            $id, 
-            form_post::editor_options(null), 
-            $data->message
-        );
-        $announcement->set('message', $message);
-
-        // Store attachments to a permanent file area.
-        $info = file_get_draft_area_info($data->attachments);
-        $attachment = ($info['filecount']>0) ? '1' : '';
-        $announcement->set('attachment', $attachment);
-        file_save_draft_area_files(
-            $data->attachments, 
-            $context->id, 
-            'block_appreciation', 
-            'attachment', 
-            $id, 
-            form_post::attachment_options()
-        );
-        $announcement->update();
-
-        // Determine whether announcement needs moderation.
-        moderation::setup_moderation($id, $tags);
-
-        // Save the audiences.
-        static::save_audiences($id, $tags);
-
-        // Finally, set savecomplete to true, indicating that all aspects of the 
-        // announcement have been fully saved.
-        // Update single field rather than using the persistent as the announcement
-        // data could have been altered for moderation requirements.
-        $DB->set_field('ann_posts', 'savecomplete', 1, array('id' => $id));
-
-        return $id;
-    }*/
-
-
+    }
 
     public static function soft_delete($id) {
         global $DB, $USER;
