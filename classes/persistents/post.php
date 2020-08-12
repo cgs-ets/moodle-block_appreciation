@@ -163,7 +163,8 @@ class post extends persistent {
         $blockconfig = unserialize(base64_decode($blockinstance->configdata));
         
         // Check if user is the approver for this block.
-        if ($USER->username == $blockconfig->approver) {
+        $approver = isset($blockconfig->approver) ? $blockconfig->approver : 0;
+        if ($USER->username == $approver) {
             // Approve the post.
             $post->set('approved', 1);
             $post->update();
@@ -252,7 +253,8 @@ class post extends persistent {
         $blockconfig = unserialize(base64_decode($blockinstance->configdata));
         
         // Check if user is the approver for this block.
-        if ($USER->username == $blockconfig->approver) {
+        $approver = isset($blockconfig->approver) ? $blockconfig->approver : 0;
+        if ($USER->username == $approver) {
             // Approve the post.
             $post->set('deleted', 1);
             $post->update();

@@ -98,7 +98,8 @@ $PAGE->requires->css(new moodle_url($CFG->wwwroot . '/blocks/appreciation/styles
 echo $OUTPUT->header();
 
 // Export the announcements list.
-$isapprover = ($USER->username == $blockconfig->approver);
+$approver = isset($blockconfig->approver) ? $blockconfig->approver : 0;
+$isapprover = ($USER->username == $approver);
 $relateds = [
     'context' => $coursecontext,
 	'posts' => array($post),

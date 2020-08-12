@@ -72,7 +72,8 @@ $addnewurl = new moodle_url('/blocks/appreciation/post.php', array(
 ));
 
 //Get the unapproved url
-$isapprover = ($USER->username == $blockconfig->approver);
+$approver = isset($blockconfig->approver) ? $blockconfig->approver : 0;
+$isapprover = ($USER->username == $approver);
 $unapprovedurl = clone $pageurl;
 $unapprovedurl->param('status', 'unapproved');
 $numunapproved = post::count_records(['instanceid' => $instanceid, 'approved' => 0, 'deleted' => 0]);

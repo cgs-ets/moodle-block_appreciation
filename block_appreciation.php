@@ -110,7 +110,8 @@ class block_appreciation extends block_base {
         ));
 
         //Get the unapproved url
-        $isapprover = ($USER->username == $this->config->approver);
+        $approver = isset($this->config->approver) ? $this->config->approver : 0;
+        $isapprover = ($USER->username == $approver);
         $unapprovedurl = clone $listurl;
         $unapprovedurl->param('status', 'unapproved');
         $numunapproved = post::count_records(['instanceid' => $this->instance->id, 'approved' => 0, 'deleted' => 0]);
