@@ -47,9 +47,11 @@
                     </div>
                 </div>
             {{/possiblemore}}
+            {{#posts.0}}
+                {{#isblockcontent}}
+                    <a id="btn-viewall" class="btn btn-secondary" href="{{listurl}}">{{#str}} list:viewall, block_appreciation {{/str}}</a>
+                {{/isblockcontent}}
+            {{/posts.0}}
         {{/list}}
-        {{#isblockcontent}}
-            <a id="btn-viewall" class="btn btn-secondary" href="{{listurl}}">{{#str}} list:viewall, block_appreciation {{/str}}</a>
-        {{/isblockcontent}}
     </div>
 </div>
