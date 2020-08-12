@@ -27,6 +27,15 @@ class block_appreciation_edit_form extends block_edit_form
 
     protected function specific_definition($mform)
     {
+
+        // Hide block.
+        $type = 'checkbox';
+        $name = 'config_hideblock';
+        $title = get_string('config:hideblock', 'block_appreciation');
+        $desc = get_string('config:hideblockdesc', 'block_appreciation');
+        $mform->addElement($type, $name, $title, $desc);
+        $mform->setType('config_displaynum', PARAM_INT);
+
         // Display num.
         $type = 'text';
         $name = 'config_displaynum';
@@ -35,7 +44,6 @@ class block_appreciation_edit_form extends block_edit_form
         $mform->addElement($type, $name, $title, $desc);
         $mform->setType('config_displaynum', PARAM_INT);
         $mform->addRule('config_displaynum', get_string('err_numeric', 'form'), 'numeric', null, 'client');
-
 
         // Approver.
         $type = 'text';

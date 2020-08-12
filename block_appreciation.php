@@ -95,6 +95,11 @@ class block_appreciation extends block_base {
 
         $this->title = get_string('title', 'block_appreciation');
 
+        // Check if block should be hidden.
+        if (isset($this->config->hideblock) && $this->config->hideblock) {
+            return $this->content;
+        }
+
         $coursecontext = context_course::instance($COURSE->id);
 
         // Get the list url.

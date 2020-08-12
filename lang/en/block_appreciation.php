@@ -33,6 +33,9 @@ $string['config:displaynum'] = 'Display number';
 $string['config:displaynumdesc'] = 'Number of most recent posts to display';
 $string['config:approver'] = 'Approver';
 $string['config:approverdesc'] = 'Username of the person in the course that will be approving posts.';
+$string['config:hideblock'] = 'Hide block';
+$string['config:hideblockdesc'] = 'Tick this to hide the block contents from the course. The list can still be accessed via direct link.';
+
 
 $string['postform:postthankyou'] = 'Post a thank you';
 $string['postform:postaddedsuccess'] = 'Your message was successfully added.';
