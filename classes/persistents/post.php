@@ -70,6 +70,9 @@ class post extends persistent {
             "message" => [
                 'type' => PARAM_RAW,
             ],
+            "messageformat" => [
+                'type' => PARAM_INT,
+            ],
             "deleted" => [
                 'type' => PARAM_BOOL,
                 'default' => 0,

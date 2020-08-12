@@ -100,6 +100,7 @@ if ($formdata = $formpost->get_data()) {
     $recipient = json_decode($formdata->recipient);
     $data->recipient = $recipient->username;
     $data->message = '';
+    $data->messageformat = $formdata->message['format'];
     $post = new post(0, $data);
     $post->create();
 

@@ -28,7 +28,7 @@ defined('MOODLE_INTERNAL') || die();
 use core\external\persistent_exporter;
 use renderer_base;
 use \block_appreciation\persistents\post;
-require_once($CFG->libdir .'/filelib.php');
+//require_once($CFG->libdir .'/filelib.php');
 
 
 /**
@@ -45,14 +45,16 @@ class post_exporter extends persistent_exporter {
         return post::class; 
     }
 
-    /**
+     /**
      * Returns a list of objects that are related.
+     *
+     * We need the context to be used when formatting the message field.
      *
      * @return array
      */
     protected static function define_related() {
         return [
-        	'context' => 'context',
+            'context' => 'context',
             'isapprover' => 'bool',
         ];
     }
@@ -177,6 +179,7 @@ class post_exporter extends persistent_exporter {
      */
     protected function get_format_parameters_for_message() {
         return [
+        	'context' => $this->related['context'],
             'component' => 'block_appreciation',
             'filearea' => 'post',
             'itemid' => $this->data->id,
