@@ -15,36 +15,28 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
     @package   block_appreciation
-    @copyright 2020 Michael Vangelovski <michael.vangelovski@hotmail.com>
+    @copyright 2020 Michael Vangelovski
     @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
 }}
 {{!
-    @template block_appreciation/list
+    @template block_appreciation/view
 
-    Course Announcements block list template.
+    Template for single post.
 }}
 
 <div class="block_appreciation" data-region="block_appreciation-instance-{{instanceid}}">
-    <div class="bapp-header">
-        <a id="btn-newthankyou" class="btn btn-secondary" href="{{addnewurl}}">{{# str }} addnew, block_appreciation {{/ str }}</a>
-        {{#isapprover}}<a id="btn-viewunapproved" class="btn btn-primary" href="{{unapprovedurl}}">{{# str }} viewunapproved, block_appreciation, {{numunapproved}} {{/ str }}</a>{{/isapprover}}
-    </div>
     <div class="bapp-list">
     {{#list}}
         {{#posts}}
             {{>block_appreciation/post}}
         {{/posts}}
-        {{^posts.0}}{{#str}} list:nothankyous, block_appreciation {{/str}}{{/posts.0}}
+        {{^posts.0}}{{#str}} list:postnotfound, block_appreciation {{/str}}{{/posts.0}}
     {{/list}}
     </div>
-    {{#list}}
-        {{#possiblemore}}
-            {{{nextpagelink}}}
-            <div class="page-load-status">
-                <div class="infinite-scroll-request loader">
-                    <div class="circle spin"></div>
-                </div>
-            </div>
-        {{/possiblemore}}
-    {{/list}}
+    <div class="lann-footer">
+        <a id="btn-viewall" class="btn btn-secondary" href="{{listurl}}">{{#str}} list:viewall, block_appreciation {{/str}}</a>
+        {{#canpost}}
+        <a id="btn-newpost" class="btn btn-secondary" href="{{addnewurl}}">{{#str}} addnew, block_appreciation {{/str}}</a>
+        {{/canpost}}
+    </div>
 </div>

@@ -26,7 +26,7 @@
 // Include required files and classes.
 require_once('../../config.php');
 use \block_appreciation\forms\form_post;
-use \block_appreciation\persistents\thankyou;
+use \block_appreciation\persistents\post;
 
 $instanceid = required_param('instanceid', PARAM_INT);
 $courseid   = required_param('courseid', PARAM_INT);
@@ -60,7 +60,7 @@ $PAGE->navbar->add($title);
 require_login($course, false);
 require_capability('block/appreciation:post', $blockcontext);
 
-$redirectdefault = new \moodle_url('/blocks/appreciation/view.php', array(
+$redirectdefault = new \moodle_url('/blocks/appreciation/list.php', array(
     'instanceid' => $instanceid,
     'courseid' => $courseid,
 ));
@@ -87,6 +87,7 @@ if ($formpost->is_cancelled()) {
 $formpost->set_data(array(
     'instanceid' => $instanceid,
     'courseid' => $courseid,
+    'general' => get_string('postform:postthankyou', 'block_appreciation'),
 ));
 
 // Form submitted.
@@ -99,21 +100,21 @@ if ($formdata = $formpost->get_data()) {
     $recipient = json_decode($formdata->recipient);
     $data->recipient = $recipient->username;
     $data->message = '';
-    $thankyou = new thankyou(0, $data);
-    $thankyou->create();
+    $post = new post(0, $data);
+    $post->create();
 
     // Store message files to a permanent file area and save message text.
     $message = file_save_draft_area_files(
         $formdata->message['itemid'], 
         $coursecontext->id, 
         'block_appreciation', 
-        'thankyou', 
-        $thankyou->get('id'), 
+        'post', 
+        $post->get('id'), 
         form_post::editor_options(), 
         $formdata->message['text']
     );
-    $thankyou->set('message', $message);
-    $thankyou->update();
+    $post->set('message', $message);
+    $post->update();
 
     // Redirect.
     $message = get_string("postform:postaddedsuccess", "block_appreciation");

@@ -25,6 +25,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+use \block_appreciation\persistents\post;
+
 class block_appreciation extends block_base {
 
     /**
@@ -91,38 +93,63 @@ class block_appreciation extends block_base {
             return $this->content;
         }
 
-        // Get the thankyou posts.
-        $displaynum = 10;
-        if (isset($this->config->displaynum)) {
-            $displaynum = $this->config->displaynum;
-        }
+        $coursecontext = context_course::instance($COURSE->id);
+        //$blockcontext = context_block::instance()
 
-        // Fetch the thankyou posts.
-        
-        //$relateds = [
-        //    'context' => $context,
-        //    'posts' => $posts,
-        //    'page' => 0,
-        //];
-        //$list = new list_exporter(null, $relateds);
-
-        // View more link.
-        $link = new \moodle_url('/blocks/appreciation/view.php', array(
+        // Get the list url.
+        $listurl = new \moodle_url('/blocks/appreciation/list.php', array(
             'instanceid' => $this->instance->id,
             'courseid' => $COURSE->id
         ));
 
-        // Contruct the data for rendering.
-        $data = array(
-            //'list' => $list->export($OUTPUT),
+        // Get the add new URL.
+        $addnewurl = new moodle_url('/blocks/appreciation/post.php', array(
             'instanceid' => $this->instance->id,
-            'viewmoreurl' => $link->out(false),
+            'courseid' => $COURSE->id,
+        ));
+
+        //Get the unapproved url
+        $isapprover = ($USER->username == $this->config->approver);
+        $unapprovedurl = clone $listurl;
+        $unapprovedurl->param('status', 'unapproved');
+        $numunapproved = post::count_records(['instanceid' => $this->instance->id, 'approved' => 0, 'deleted' => 0]);
+        $showunapprovedbtn = ($isapprover && $numunapproved);
+
+         // Get the thank yous.
+        $displaynum = APPRECIATION_DISPLAYNUM;
+        if (isset($this->config->displaynum)) {
+            $displaynum = $this->config->displaynum;
+        }
+        $posts = post::get_for_user($this->instance->id, $isapprover, 0, $displaynum);
+
+        // Export the announcements list.
+        $relateds = [
+            'context' => $coursecontext,
+            'posts' => $posts,
+            'page' => 0,
+            'isapprover' => $isapprover,
+        ];
+
+        $list = new block_appreciation\external\list_exporter(null, $relateds);
+        $data = array(
+            'instanceid' => $this->instance->id,
+            'list' => $list->export($OUTPUT),
+            'listurl' => $listurl->out(false),
+            'showlisturl' => true,
+            'addnewurl' => $addnewurl->out(false),
+            'canpost' => has_capability('block/appreciation:post', $this->context),
+            'isapprover' => $isapprover,
+            'numunapproved' => $numunapproved,
+            'unapprovedurl' => $unapprovedurl->out(false),
+            'showunapprovedbtn' => $showunapprovedbtn,
         );
 
         // Render the appreciation list.
-        //$this->content->text = $OUTPUT->render_from_template('block_appreciation/list', $data);
+        $this->content->text = $OUTPUT->render_from_template('block_appreciation/list', $data);
 
-        $this->content->text = $link->out(false);
+
+
+
 
         return $this->content;
     }

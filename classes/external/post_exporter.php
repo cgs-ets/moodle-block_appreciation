@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /**
- * Provides {@link block_appreciation\external\thankyou_exporter} class.
+ * Provides {@link block_appreciation\external\post_exporter} class.
  *
  * @package   block_appreciation
  * @copyright 2020 Michael Vangelovski
@@ -27,13 +27,14 @@ defined('MOODLE_INTERNAL') || die();
 
 use core\external\persistent_exporter;
 use renderer_base;
-use \block_appreciation\persistents\thankyou;
+use \block_appreciation\persistents\post;
+require_once($CFG->libdir .'/filelib.php');
 
 
 /**
- * Exporter of a single thankyou
+ * Exporter of a single post
  */
-class thankyou_exporter extends persistent_exporter {
+class post_exporter extends persistent_exporter {
 
     /**
     * Returns the specific class the persistent should be an instance of.
@@ -41,7 +42,7 @@ class thankyou_exporter extends persistent_exporter {
     * @return string
     */
     protected static function define_class() {
-        return thankyou::class; 
+        return post::class; 
     }
 
     /**
@@ -51,6 +52,7 @@ class thankyou_exporter extends persistent_exporter {
      */
     protected static function define_related() {
         return [
+        	'context' => 'context',
             'isapprover' => 'bool',
         ];
     }
@@ -62,6 +64,9 @@ class thankyou_exporter extends persistent_exporter {
 	protected static function define_other_properties() {
 	    return [
 	        'creatorphoto' => [
+	        	'type' => PARAM_RAW,
+	        ],
+	        'creatorphototokenised' => [
 	        	'type' => PARAM_RAW,
 	        ],
 	        'creatorfullname' => [
@@ -89,6 +94,15 @@ class thankyou_exporter extends persistent_exporter {
                 'type' => PARAM_BOOL,
                 'default' => 0,
             ],
+	        'messagetokenized' => [
+	        	'type' => PARAM_RAW,
+	        ],
+	        'messageplain' => [
+	        	'type' => PARAM_RAW,
+	        ],
+	        'viewurl' => [
+	        	'type' => PARAM_RAW,
+	        ],
 	    ];
 	}
 
@@ -101,7 +115,7 @@ class thankyou_exporter extends persistent_exporter {
 	protected function get_other_values(renderer_base $output) {
 		global $USER, $DB, $OUTPUT, $PAGE;
 
-		// Check if user is the creator of this thankyou.
+		// Check if user is the creator of this post.
 		$iscreator = 0;
 		if ($this->data->creator == $USER->username || $this->related['isapprover']) {
 			$iscreator = 1;
@@ -113,6 +127,7 @@ class thankyou_exporter extends persistent_exporter {
         $creatorphoto = new \moodle_url('/user/pix.php/'.$creator->id.'/f2.jpg');
         $creatorfullname = fullname($creator);
         $creatorurl = new \moodle_url('/user/profile.php', array('id' => $creator->id));
+        $creatorphototokenised = $OUTPUT->user_picture($creator, array('size' => 35, 'includetoken' => true));
 
         // Recipient meta.
         $recipient = $DB->get_record('user', array('username'=>$this->data->recipient));
@@ -130,8 +145,16 @@ class thankyou_exporter extends persistent_exporter {
 	    	$isapproved = true;
 	    }
 
+	    $messagetokenized = file_rewrite_pluginfile_urls($this->data->message, 'pluginfile.php', $this->related['context']->id,
+	        		'block_appreciation', 'post', $this->data->id, ['includetoken' => true]);
+	    $messageplain = trim(html_to_text(format_text_email($messagetokenized, FORMAT_PLAIN)));
+
+	    $viewurl = new \moodle_url('/blocks/appreciation/view.php', array('id' => $this->data->id));
+    	$viewurl = $viewurl->out();
+
 	    return [
 	        'creatorphoto' => $creatorphoto,
+	        'creatorphototokenised' => $creatorphototokenised,
 	        'creatorfullname' => $creatorfullname,
 	        'creatorurl' => $creatorurl->out(false),
 	        'recipientphoto' => $recipientphoto,
@@ -140,6 +163,9 @@ class thankyou_exporter extends persistent_exporter {
 	        'readabletime' => $readabletime,
 	        'iscreator' => $iscreator,
 	        'isapproved' => $isapproved,
+	        'messagetokenized' => $messagetokenized,
+	        'messageplain' => $messageplain,
+	        'viewurl' => $viewurl,
 	    ];
 	}
 
@@ -152,7 +178,7 @@ class thankyou_exporter extends persistent_exporter {
     protected function get_format_parameters_for_message() {
         return [
             'component' => 'block_appreciation',
-            'filearea' => 'thankyou',
+            'filearea' => 'post',
             'itemid' => $this->data->id,
             'options' => \block_appreciation\forms\form_post::editor_options(),
         ];

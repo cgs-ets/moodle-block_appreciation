@@ -25,30 +25,46 @@
 // Include required files and classes.
 require_once('../../config.php');
 require_once($CFG->dirroot . '/blocks/appreciation/locallib.php');
-use \block_appreciation\forms\form_post;
-use \block_appreciation\persistents\thankyou;
+use \block_appreciation\persistents\post;
 
-$instanceid = required_param('instanceid', PARAM_INT);
-$courseid   = required_param('courseid', PARAM_INT);
-$page = optional_param('page', 0, PARAM_INT);
-$status = optional_param('status', '', PARAM_TEXT);
+$postid = optional_param('id', 0, PARAM_INT);
 
-// Determine course and context.
-$course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
-$coursecontext = context_course::instance($courseid);
+// Get the block instance id of the post.
+$post = new post($postid);
+if (empty($post)) {
+    \core\notification::error(get_string('list:postnotfound', 'block_appreciation'));
+    echo $OUTPUT->header();
+    echo $OUTPUT->footer();
+}
 
-// Get specific block config and context.
+// Get the block instance config for the post.
+$instanceid = $post->get('instanceid');
 $blockinstance = $DB->get_record('block_instances', array('id' => $instanceid), '*', MUST_EXIST);
 $blockconfig = unserialize(base64_decode($blockinstance->configdata));
+if (empty($blockinstance)) {
+    \core\notification::error(get_string('list:blocknotfound', 'block_appreciation'));
+    echo $OUTPUT->header();
+    echo $OUTPUT->footer();
+}
 $blockcontext = context_block::instance($instanceid);
+
+// Get the courseid based on the block instanceid.
+$courseid = get_courseid_by_block_instance($instanceid);
+if (empty($courseid)) {
+    \core\notification::error(get_string('list:coursenotfound', 'block_appreciation'));
+    echo $OUTPUT->header();
+    echo $OUTPUT->footer();
+}
+
+// Load the course record and context.
+$course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
+$coursecontext = context_course::instance($courseid);
 
 // Set up page parameters.
 $PAGE->set_course($course);
 $PAGE->requires->css('/blocks/appreciation/styles.css');
 $pageurl = new moodle_url('/blocks/appreciation/view.php', array(
-    'instanceid' => $instanceid,
-    'courseid' => $courseid,
-    'page' => $page,
+    'id' => $postid,
 ));
 $PAGE->set_url($pageurl);
 $PAGE->set_context($coursecontext);
@@ -61,48 +77,48 @@ $PAGE->navbar->add($title);
 require_login($course, false);
 require_capability('block/appreciation:view', $blockcontext);
 
+// Get the list url.
+$listurl = new \moodle_url('/blocks/appreciation/list.php', array(
+    'instanceid' => $instanceid,
+    'courseid' => $COURSE->id
+));
+
+// Get the add new URL.
+$addnewurl = new moodle_url('/blocks/appreciation/post.php', array(
+    'instanceid' => $instanceid,
+    'courseid' => $courseid,
+));
+
+
 // Add css.
 $PAGE->requires->css(new moodle_url($CFG->wwwroot . '/blocks/appreciation/styles.css', array('nocache' => rand().rand())));
 
-//Get the unapproved url
-$isapprover = ($USER->username == $blockconfig->approver);
-$unapprovedurl = clone $pageurl;
-$unapprovedurl->param('status', 'unapproved');
-$numunapproved = thankyou::count_records(['instanceid' => $instanceid, 'approved' => 0, 'deleted' => 0]);
-
- // Get the thank yous.
-$thankyous = array();
-if ($status == 'unapproved') {
-    if ($isapprover) {
-        $thankyous = thankyou::get_for_approval($instanceid, $page);
-    }
-} else {
-    $thankyous = thankyou::get_for_user($instanceid, $isapprover, $page);
-}
 
 // Build the output.
 echo $OUTPUT->header();
 
 // Export the announcements list.
+$isapprover = ($USER->username == $blockconfig->approver);
 $relateds = [
-	'posts' => $thankyous,
-    'page' => $page,
+    'context' => $coursecontext,
+	'posts' => array($post),
+    'page' => 0,
     'isapprover' => $isapprover,
 ];
 
 $list = new block_appreciation\external\list_exporter(null, $relateds);
 $data = array(
     'instanceid' => $instanceid,
-	'list' => $list->export($OUTPUT),
-    'isapprover' => $isapprover,
-    'numunapproved' => $numunapproved,
-    'unapprovedurl' => $unapprovedurl->out(false),
+    'list' => $list->export($OUTPUT),
+    'listurl' => $listurl->out(false),
+    'addnewurl' => $addnewurl->out(false),
+    'canpost' => has_capability('block/appreciation:post', $blockcontext),
 );
 
 // Render the appreciation list.
 echo $OUTPUT->render_from_template('block_appreciation/view', $data);
 
 // Add scripts.
-//$PAGE->requires->js_call_amd('block_appreciation/content', 'init', array('instanceid' => $instanceid));
+$PAGE->requires->js_call_amd('block_appreciation/content', 'init', array('instanceid' => $instanceid));
 
 echo $OUTPUT->footer();

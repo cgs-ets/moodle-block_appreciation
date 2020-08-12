@@ -35,4 +35,22 @@ $functions = [
         'loginrequired' => true,
         'ajax'          => true,
     ],
+    'block_appreciation_approve_post' => [
+        'classname'     => 'block_appreciation\external\api',
+        'methodname'    => 'approve_post',
+        'classpath'     => '',
+        'description'   => 'Approve a post',
+        'type'          => 'write',
+        'loginrequired' => true,
+        'ajax'          => true,
+    ],
+    'block_appreciation_delete_post' => [
+        'classname'     => 'block_appreciation\external\api',
+        'methodname'    => 'delete_post',
+        'classpath'     => '',
+        'description'   => 'Delete a post',
+        'type'          => 'write',
+        'loginrequired' => true,
+        'ajax'          => true,
+    ],
 ];

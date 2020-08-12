@@ -37,13 +37,13 @@
         <div class="meta">
             <div class="time">{{readabletime}}</div>
             {{#isapprover}}
-                {{^isapproved}}<span class="option"><a href="#">Approve</a></span>{{/isapproved}}
+                {{^isapproved}}<span class="action action-approve"><a href="#">Approve</a></span>{{/isapproved}}
             {{/isapprover}}
             {{#iscreator}}
-                <span class="option"><a href="#">Delete</a></span>
+                <span class="action action-delete"><a href="#">Delete</a></span>
             {{/iscreator}}
         </div>
-        <div class="clear"></div>
+        <div class="spinner"><div class="circle spin"></div></div>
     </div>
 
     {{^isapproved}}<div class="note availability">{{#str}} list:postunapproved, block_appreciation {{/str}}</div>{{/isapproved}}

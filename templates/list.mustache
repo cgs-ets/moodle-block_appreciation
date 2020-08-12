@@ -1,0 +1,55 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+    @package   block_appreciation
+    @copyright 2020 Michael Vangelovski <michael.vangelovski@hotmail.com>
+    @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+}}
+{{!
+    @template block_appreciation/list
+
+    List template.
+}}
+
+<div class="block_appreciation" data-region="block_appreciation-instance-{{instanceid}}">
+    <div class="bapp-header">
+        <a id="btn-newpost" class="btn btn-secondary" href="{{addnewurl}}">{{#str}} addnew, block_appreciation {{/str}}</a>
+        {{#showunapprovedbtn}}<a id="btn-viewunapproved" class="btn btn-primary" href="{{unapprovedurl}}">{{#str}} viewunapproved, block_appreciation, {{numunapproved}} {{/str}}</a>{{/showunapprovedbtn}}
+    </div>
+    <div class="bapp-list">
+    {{#list}}
+        {{#posts}}
+            {{>block_appreciation/post}}
+        {{/posts}}
+        {{^posts.0}}{{#str}} list:noposts, block_appreciation {{/str}}{{/posts.0}}
+    {{/list}}
+    </div>
+    <div class="bapp-footer">
+        {{#list}}
+            {{#possiblemore}}
+                {{{nextpagelink}}}
+                <div class="page-load-status">
+                    <div class="infinite-scroll-request loader">
+                        <div class="circle spin"></div>
+                    </div>
+                </div>
+            {{/possiblemore}}
+        {{/list}}
+        {{#showlisturl}}
+            <a id="btn-viewall" class="btn btn-secondary" href="{{listurl}}">{{#str}} list:viewall, block_appreciation {{/str}}</a>
+        {{/showlisturl}}
+    </div>
+</div>

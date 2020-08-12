@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Provides {@link block_appreciation\external\approve_post} trait.
+ * Provides {@link block_appreciation\external\delete_post} trait.
  *
  * @package   block_appreciation
  * @category  external
@@ -36,35 +36,32 @@ use invalid_parameter_exception;
 require_once($CFG->libdir.'/externallib.php');
 
 /**
- * Trait implementing the external function block_appreciation_approve_post.
+ * Trait implementing the external function block_appreciation_delete_post.
  */
-trait approve_post {
+trait delete_post {
 
     /**
      * Describes the structure of parameters for the function.
      *
      * @return external_function_parameters
      */
-    public static function approve_post_parameters() {
+    public static function delete_post_parameters() {
         return new external_function_parameters([
             'id' => new external_value(PARAM_INT, 'ID of the post')
         ]);
     }
 
     /**
-     * Approve the post
+     * Delete the post
      *
      * @param int $id Id of the post
      */
-    public static function approve_post($id) {
+    public static function delete_post($id) {
         global $USER;
 
-        $context = \context_user::instance($USER->id);
-        self::validate_context($context);
+        self::validate_parameters(self::delete_post_parameters(), compact('id'));
 
-        self::validate_parameters(self::approve_post_parameters(), compact('id'));
-
-        post::approve($id);
+        post::soft_delete($id);
     }
 
     /**
@@ -72,7 +69,7 @@ trait approve_post {
      *
      * @return external_single_structure
      */
-    public static function approve_post_returns() {
+    public static function delete_post_returns() {
          return null;
     }
 }

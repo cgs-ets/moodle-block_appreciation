@@ -23,4 +23,51 @@
 defined('MOODLE_INTERNAL') || die();
 
 
-define('APPRECIATION_PERPAGE', 50);
+define('APPRECIATION_PERPAGE', 50); // The number of posts to fetch at a time on the list page.
+define('APPRECIATION_DISPLAYNUM', 5); // The number of posts displayed in the block content.
+
+// Get the courseid based on the block instanceid.
+function get_courseid_by_block_instance($instanceid) {
+	global $DB;
+
+	$sql = "SELECT c.instanceid
+        FROM {context} c, {block_instances} b
+        WHERE b.id = ?
+        AND c.id = b.parentcontextid";
+	$params = array($instanceid);
+	$courseid = $DB->get_field_sql($sql, $params);
+	//$course = get_course($courseid);
+
+	return $courseid;
+}
+
+/**
+ * Removes properties from user record that are not necessary for sending post notifications.
+ *
+ */
+function minimise_recipient_record($recipient) {
+    // Make sure we do not store info there we do not actually
+    // need in mail generation code or messaging.
+    unset($recipient->institution);
+    unset($recipient->department);
+    unset($recipient->address);
+    unset($recipient->city);
+    unset($recipient->url);
+    unset($recipient->currentlogin);
+    unset($recipient->description);
+    unset($recipient->descriptionformat);
+    unset($recipient->icq);
+    unset($recipient->skype);
+    unset($recipient->yahoo);
+    unset($recipient->aim);
+    unset($recipient->msn);
+    unset($recipient->phone1);
+    unset($recipient->phone2);
+    unset($recipient->country);
+    unset($recipient->firstaccess);
+    unset($recipient->lastaccess);
+    unset($recipient->lastlogin);
+    unset($recipient->lastip);
+
+    return $recipient;
+}

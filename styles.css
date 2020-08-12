@@ -1,17 +1,18 @@
 
+/* Post */
 /* The recipient field is a text field hidden by css rather than a hidden field so that we can attach validation to it. */
-#fitem_id_recipient {
+#page-blocks-appreciation-post #fitem_id_recipient {
     display: none;
 }
-#fitem_id_recipient>div{
+#page-blocks-appreciation-post #fitem_id_recipient>div{
     display: none;
 }
-#fitem_id_recipient.has-danger {
+#page-blocks-appreciation-post #fitem_id_recipient.has-danger {
     display: block;
     height: 22px;
     overflow: hidden;
 }
-#fitem_id_recipient.has-danger:before {
+#page-blocks-appreciation-post #fitem_id_recipient.has-danger:before {
     content: "You must select a recipient.";
     color: red;
     width: 100%;
@@ -54,8 +55,10 @@
     background: #f2f2f2;
 }
 
-
-/* list */
+/* List */
+#page-blocks-appreciation-list #region-main {
+    background-color: #f4f6f8;
+}
 .block_appreciation .bapp-header {
     text-align: right;
 }
@@ -70,22 +73,19 @@
     position: relative;
     border: 1px solid #ddd;
 }
-.block_appreciation .bapp-list .post.unapproved {
-    background-color: #f8dec4;
-}
-.block_appreciation .bapp-list .post.unapproved .header {
-    border-bottom: 1px solid #bcbcbc;
-}
-.block_appreciation .bapp-list .post .note {
-    font-style: italic;
-    font-size: 13px;
-    padding: 6px 15px 0;
-}
 .block_appreciation .bapp-list .post .header {
     position: relative;
     width: 100%;
     border-bottom: 1px solid #e4e6e8;
     padding: 10px 15px;
+    overflow: hidden;
+}
+
+.block_appreciation .bapp-list .post .note {
+    display: none;
+    font-style: italic;
+    font-size: 13px;
+    padding: 6px 15px 0;
 }
 .block_appreciation .bapp-list .post .creator,
 .block_appreciation .bapp-list .post .seperator,
@@ -107,13 +107,17 @@
     float: right;
     text-align: right;
 }
-.block_appreciation .bapp-list .post .header .meta .option:after {
+.block_appreciation .bapp-list .post .header .meta .action:after {
     content: "•";
     color: #777;
     margin: 0 5px;
 }
-.block_appreciation .bapp-list .post .header .meta .option:last-of-type:after {
+.block_appreciation .bapp-list .post .header .meta .action:last-of-type:after {
     content: "";
+    margin: 0;
+}
+.block_appreciation .bapp-list .post .header .meta .action-approve {
+    display: none;
 }
 .block_appreciation .bapp-list .post .userphoto {
     position: relative;
@@ -124,6 +128,7 @@
     width: 25px;
     height: 25px;
     border: 0 none;
+    background-color: #ccc;
 }
 .block_appreciation .bapp-list .post .userphoto img {
     display: block;
@@ -138,4 +143,62 @@
 
 .block_appreciation .bapp-list .post .message p:last-of-type {
     margin-bottom: 0;
+}
+/* Unapproved post */
+.block_appreciation .bapp-list .post.unapproved {
+    background-color: #f8dec4;
+}
+.block_appreciation .bapp-list .post.unapproved .header {
+    border-bottom: 1px solid #bcbcbc;
+}
+.block_appreciation .bapp-list .post.unapproved .note {
+    display: block;
+}
+.block_appreciation .bapp-list .post.unapproved .header .meta .action-approve {
+    display: inline;
+}
+.block_appreciation .bapp-list .post.removing {
+    background-color: #bbbbbb;
+}
+/* Helpers */
+.block_appreciation .spinner {
+    display: none;
+    padding: 0;
+    width: 20px;
+    float: right;
+    margin-right: 15px;
+    margin-top: 5px;
+}
+.block_appreciation .spinner .circle {
+    display: block;
+    position: relative;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1px solid transparent;
+    border-top-color: #313131;
+    border-left-color: #313131;
+    text-indent: -9999px;
+    margin: 0 auto;
+}
+.block_appreciation .post.submitting .spinner {
+    display: block;
+}
+.block_appreciation .spin {
+    -webkit-animation: bappspin 0.4s linear 0s infinite;
+    -moz-animation: bappspin 0.4s linear 0s infinite;
+    -o-animation: bappspin 0.4s linear 0s infinite;
+    animation: bappspin 0.4s linear 0s infinite;
+}
+@-webkit-keyframes bappspin {
+    from { -webkit-transform: rotate(0deg); }
+    to { -webkit-transform: rotate(360deg); }
+}
+@-moz-keyframes bappspin {
+    from { -moz-transform: rotate(0deg); }
+    to { -moz-transform: rotate(360deg); }
+}
+@keyframes bappspin {
+    from {transform:rotate(0deg);}
+    to {transform:rotate(360deg);}
 }

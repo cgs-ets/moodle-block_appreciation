@@ -44,7 +44,7 @@ class list_exporter extends exporter {
     protected static function define_other_properties() {
         return [
             'posts' => [
-                'type' => thankyou_exporter::read_properties_definition(),
+                'type' => post_exporter::read_properties_definition(),
                 'multiple' => true,
                 'optional' => false,
             ],
@@ -70,8 +70,8 @@ class list_exporter extends exporter {
     */
     protected static function define_related() {
         return [
-            //'context' => 'context',
-            'posts' => 'block_appreciation\persistents\thankyou[]',
+            'context' => 'context',
+            'posts' => 'block_appreciation\persistents\post[]',
             'page' => 'int',
             'isapprover' => 'bool',
         ];
@@ -89,10 +89,11 @@ class list_exporter extends exporter {
         $posts = [];
         // Export each announcement in the list
         foreach ($this->related['posts'] as $post) {
-            $thankyouexporter = new thankyou_exporter($post, [
+            $postexporter = new post_exporter($post, [
+                'context' => $this->related['context'],
                 'isapprover' => $this->related['isapprover'],
             ]);
-            $posts[] = $thankyouexporter->export($output);
+            $posts[] = $postexporter->export($output);
         }
 
         $possiblemore = ( count($posts) >= 25 );
@@ -101,7 +102,7 @@ class list_exporter extends exporter {
         // To minimise load time, we do not attempt to figure out how many posts.
         $totalcount = 999999999;
         $perpage = APPRECIATION_PERPAGE;
-        $pagingbar = new \paging_bar($totalcount, $this->related['page'], $perpage, 'view.php', 'page');
+        $pagingbar = new \paging_bar($totalcount, $this->related['page'], $perpage, 'list.php', 'page');
         $pagingbar->prepare($output, $PAGE, '');
         $nextpagelink = $pagingbar->nextlink;
 

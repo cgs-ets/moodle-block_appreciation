@@ -15,33 +15,22 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Provides {@link block_appreciation\external\api} class.
+ * Defines message providers (types of messages being sent)
  *
  * @package   block_appreciation
  * @category  external
  * @copyright 2020 Michael Vangelovski
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- *
  */
 
-namespace block_appreciation\external;
 
-defined('MOODLE_INTERNAL') || die();
-
-require_once($CFG->libdir.'/externallib.php');
-
-use external_api;
-
-/**
- * Provides an external API of the plugin.
- *
- * @copyright 2020 Michael Vangelovski
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class api extends external_api {
-
-    use get_recipient_users;
-    use approve_post;
-    use delete_post;
-    
-}
+$messageproviders = array (
+    // Ordinary single notifications
+    'notifications' => array(
+        'defaults' => array(
+            'popup' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_LOGGEDIN + MESSAGE_DEFAULT_LOGGEDOFF,
+            'email' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_LOGGEDIN + MESSAGE_DEFAULT_LOGGEDOFF,
+            'airnotifier' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_LOGGEDIN + MESSAGE_DEFAULT_LOGGEDOFF,
+        ),
+    ),
+);

@@ -23,49 +23,116 @@ define(['jquery', 'core/log', 'core/ajax'], function($, Log, Ajax) {
     "use strict";
 
     /**
-     * Click handler to toggle auditing mode.
-     * @param {Object} button The jquery object.
-     * @param int the user id.
+     * Initializes the component.
      */
-    function toggleAuditingMode(button, userid) {
-        button.addClass('loading');
-        // Save toggle state as a preference.
-        var value = button.hasClass('auditing-is-off') ? 1 : 0;
-        Log.debug('block_appreciation: Setting ' + value);
-        var preferences = [{
-            'name': 'block_appreciation_auditingmode',
-            'value': value,
-            'userid': userid
-        }];
-        Ajax.call([{
-            methodname: 'core_user_set_user_preferences',
-            args: { preferences: preferences },
-            done: function(response) {
-                location.reload();
-            }
-        }]);
+    function init(instanceid) {
+        Log.debug('block_appreciation/content: initializing');
+
+        var rootel = $('[data-region="block_appreciation-instance-' + instanceid + '"]').first();
+
+        if (!rootel.length) {
+            Log.error('block_appreciation/control: wrapping region not found!');
+            return;
+        }
+
+        var content = new Content(rootel, instanceid);
+        content.main();
     }
 
+    /**
+     * The constructor
+     *
+     * @constructor
+     * @param {jQuery} rootel
+     */
+    function Content(rootel, instanceid) {
+        var self = this;
+        self.rootel = rootel;
+        self.instanceid = instanceid;
+    }
+
+    /**
+     * Run the Audience Selector.
+     *
+     */
+    Content.prototype.main = function () {
+        var self = this;
+
+        // Handle approve click.
+        self.rootel.on('click', '.post .action-approve', function(e) {
+            e.preventDefault();
+            var button = $(this);
+            self.approve(button);
+        });
+
+        // Handle delete click.
+        self.rootel.on('click', '.post .action-delete', function(e) {
+            e.preventDefault();
+            var button = $(this);
+            self.delete(button);
+        });
+    };
+
+    /**
+     * Approve a post.
+     *
+     * @method approve
+     */
+    Content.prototype.approve = function (button) {
+        var self = this;
+
+        var post = button.closest('.post');
+        var id = post.data('id');
+        post.addClass('submitting');
+      
+        Ajax.call([{
+            methodname: 'block_appreciation_approve_post',
+            args: { id: id },
+            done: function(response) {
+                post.removeClass('submitting');
+                post.removeClass('unapproved');
+            },
+            fail: function(reason) {
+                post.removeClass('submitting');
+                Log.error('block_appreciation/content: failed to approve the post');
+                Log.debug(reason);
+            }
+        }]);
+    };
+
+
+    /**
+     * Delete a post.
+     *
+     * @method delete
+     */
+    Content.prototype.delete = function (button) {
+        var self = this;
+
+        var post = button.closest('.post');
+        var id = post.data('id');
+        post.addClass('submitting');
+      
+        Ajax.call([{
+            methodname: 'block_appreciation_delete_post',
+            args: { id: id },
+            done: function(response) {
+                post.removeClass('submitting');
+                post.addClass('removing');
+                post.fadeOut(1000, function() {
+                    post.remove();
+                });
+            },
+            fail: function(reason) {
+                post.removeClass('submitting');
+                Log.error('block_appreciation/content: failed to delete the post');
+                Log.debug(reason);
+            }
+        }]);
+    };
+
+
     return {
-        init: function(userid) {
-
-            if (!userid) {
-                Log.error('block_appreciation: userid not provided!');
-                return;
-            }
-
-            var rootel = $('.block_appreciation').first();
-            if (!rootel.length) {
-                Log.error('block_appreciation: root element not found!');
-                return;
-            }
-
-            // Handle turn off audit mode button.
-            rootel.on('click', '.auditing-icon', function(e) {
-                e.preventDefault();
-                var button = $(this);
-                toggleAuditingMode(button, userid);
-            });
-        }
+        init: init
     };
 });
