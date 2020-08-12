@@ -22,6 +22,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+require_once($CFG->libdir.'/filelib.php');
 
 define('APPRECIATION_PERPAGE', 50); // The number of posts to fetch at a time on the list page.
 define('APPRECIATION_DISPLAYNUM', 5); // The number of posts displayed in the block content.

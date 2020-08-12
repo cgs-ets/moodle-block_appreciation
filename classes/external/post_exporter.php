@@ -25,10 +25,10 @@ namespace block_appreciation\external;
 
 defined('MOODLE_INTERNAL') || die();
 
+require_once($CFG->dirroot . '/blocks/appreciation/locallib.php');
 use core\external\persistent_exporter;
 use renderer_base;
 use \block_appreciation\persistents\post;
-//require_once($CFG->libdir .'/filelib.php');
 
 
 /**

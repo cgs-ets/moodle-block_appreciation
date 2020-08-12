@@ -27,14 +27,14 @@ class block_appreciation_edit_form extends block_edit_form
 
     protected function specific_definition($mform)
     {
-
         // Hide block.
-        $type = 'checkbox';
+        $type = 'advcheckbox';
         $name = 'config_hideblock';
         $title = get_string('config:hideblock', 'block_appreciation');
         $desc = get_string('config:hideblockdesc', 'block_appreciation');
-        $mform->addElement($type, $name, $title, $desc);
-        $mform->setType('config_displaynum', PARAM_INT);
+        $options = array();
+        $values = array(0, 1);
+        $mform->addElement($type, $name, $title, $desc, $options, $values);
 
         // Display num.
         $type = 'text';
