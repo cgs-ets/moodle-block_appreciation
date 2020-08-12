@@ -62,12 +62,13 @@ class form_post extends \moodleform {
         $mform->addElement('header', 'general', '');
 
         // Recipient. A hidden field with a custom JS driven user select field.
+        $recipientselectorhtml = $OUTPUT->render_from_template('block_appreciation/recipient_selector', array()); 
+        $mform->addElement('html', $recipientselectorhtml);
         // The recipient field is a text field hidden by css rather than a hidden field so that we can attach validation to it. 
         $mform->addElement('text', 'recipient', 'Recipient JSON');
         $mform->setType('recipient', PARAM_RAW);
         $mform->addRule('recipient', get_string('required'), 'required', null, 'client');
-        $recipientselectorhtml = $OUTPUT->render_from_template('block_appreciation/recipient_selector', array()); 
-        $mform->addElement('html', $recipientselectorhtml);
+
 
         // Message.
         $type = 'editor';

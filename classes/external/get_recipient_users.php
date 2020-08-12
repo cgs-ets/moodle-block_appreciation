@@ -60,12 +60,18 @@ trait get_recipient_users {
      * @param int $query The search query
      */
     public static function get_recipient_users($instanceid, $query) {
+        global $USER;
+
         self::validate_parameters(self::get_recipient_users_parameters(), compact('instanceid', 'query'));
         
         $results = self::search_recipient_users($instanceid, $query);
 
         $users = array();
         foreach ($results as $user) {
+            // Do not add current user as an option.
+            if ($user->username == $USER->username) {
+                continue;
+            }
             $userphoto = new \moodle_url('/user/pix.php/'.$user->id.'/f2.jpg');
             $userurl = new \moodle_url('/user/profile.php', array('id' => $user->id));
             $users[] = array(

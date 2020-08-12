@@ -40,6 +40,7 @@ $string['postform:message'] = 'Message';
 $string['postform:recipient'] = 'Recipient';
 $string['postform:recipientplaceholder'] = 'Search by name';
 $string['postform:recipientnoselection'] = 'No selection.';
+$string['postform:erroremptymessage'] = 'Post message cannot be empty';
 
 $string['addnew'] = 'Add new';
 $string['viewunapproved'] = 'View {$a} unapproved';
@@ -53,3 +54,4 @@ $string['list:viewall'] = 'View all';
 
 $string['notification:subject'] = '{$a->siteshortname}: {$a->creatorfullname} has thanked you.';
 $string['messageprovider:notifications'] = 'Appreciation (Thank you) post notifications';
+
