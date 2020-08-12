@@ -134,10 +134,10 @@ class block_appreciation extends block_base {
 
         $list = new block_appreciation\external\list_exporter(null, $relateds);
         $data = array(
+            'isblockcontent' => true,
             'instanceid' => $this->instance->id,
             'list' => $list->export($OUTPUT),
             'listurl' => $listurl->out(false),
-            'showlisturl' => true,
             'addnewurl' => $addnewurl->out(false),
             'canpost' => has_capability('block/appreciation:post', $this->context),
             'isapprover' => $isapprover,
