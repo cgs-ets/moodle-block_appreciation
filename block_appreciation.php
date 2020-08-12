@@ -93,8 +93,9 @@ class block_appreciation extends block_base {
             return $this->content;
         }
 
+        $this->title = get_string('title', 'block_appreciation');
+
         $coursecontext = context_course::instance($COURSE->id);
-        //$blockcontext = context_block::instance()
 
         // Get the list url.
         $listurl = new \moodle_url('/blocks/appreciation/list.php', array(
