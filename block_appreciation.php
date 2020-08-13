@@ -50,7 +50,7 @@ class block_appreciation extends block_base {
      * @return bool
      */
     public function instance_allow_multiple() {
-        return false;
+        return true;
     }
 
     /**
