@@ -26,8 +26,15 @@
 
 <div class="block_appreciation" data-region="block_appreciation-instance-{{instanceid}}">
     <div class="bapp-header">
-        <a id="btn-newpost" class="btn btn-secondary" href="{{addnewurl}}">{{#str}} addnew, block_appreciation {{/str}}</a>
-        {{#showunapprovedbtn}}<a id="btn-viewunapproved" class="btn btn-primary" href="{{unapprovedurl}}">{{#str}} viewunapproved, block_appreciation, {{numunapproved}} {{/str}}</a>{{/showunapprovedbtn}}
+        
+        {{^filter.all}}
+            <a id="btn-viewall" class="btn btn-secondary" href="{{listurl}}">{{#str}} list:viewall, block_appreciation {{/str}}</a>
+        {{/filter.all}}
+        
+        {{^filter.unapproved}}{{#isapprover}}{{#numunapproved}}<a id="btn-viewunapproved" class="btn btn-secondary" href="{{unapprovedurl}}">{{#str}} viewunapproved, block_appreciation, {{numunapproved}} {{/str}}</a>{{/numunapproved}}{{/isapprover}}{{/filter.unapproved}}
+
+        <a id="btn-newpost" class="btn btn-primary" href="{{addnewurl}}">{{#str}} addnew, block_appreciation {{/str}}</a>
+        
     </div>
     <div class="bapp-list">
     {{#list}}
@@ -47,11 +54,6 @@
                     </div>
                 </div>
             {{/possiblemore}}
-            {{#posts.0}}
-                {{#isblockcontent}}
-                    <a id="btn-viewall" class="btn btn-secondary" href="{{listurl}}">{{#str}} list:viewall, block_appreciation {{/str}}</a>
-                {{/isblockcontent}}
-            {{/posts.0}}
         {{/list}}
     </div>
 </div>

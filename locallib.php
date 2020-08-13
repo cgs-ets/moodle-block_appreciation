@@ -72,3 +72,19 @@ function minimise_recipient_record($recipient) {
 
     return $recipient;
 }
+
+function get_block_urls($instanceid, $courseid) {
+    // Get the list url.
+    $listurl = new \moodle_url('/blocks/appreciation/list.php', array(
+        'instanceid' => $instanceid,
+        'courseid' => $courseid
+    ));
+
+    // Get the add new URL.
+    $addnewurl = new moodle_url('/blocks/appreciation/post.php', array(
+        'instanceid' => $instanceid,
+        'courseid' => $courseid,
+    ));
+
+    return array($listurl, $addnewurl);
+}

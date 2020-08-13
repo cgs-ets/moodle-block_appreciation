@@ -25,6 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+require_once($CFG->dirroot . '/blocks/appreciation/locallib.php');
 use \block_appreciation\persistents\post;
 
 class block_appreciation extends block_base {
@@ -102,17 +103,8 @@ class block_appreciation extends block_base {
 
         $coursecontext = context_course::instance($COURSE->id);
 
-        // Get the list url.
-        $listurl = new \moodle_url('/blocks/appreciation/list.php', array(
-            'instanceid' => $this->instance->id,
-            'courseid' => $COURSE->id
-        ));
-
-        // Get the add new URL.
-        $addnewurl = new moodle_url('/blocks/appreciation/post.php', array(
-            'instanceid' => $this->instance->id,
-            'courseid' => $COURSE->id,
-        ));
+        // Get the urls.
+        list($listurl, $addnewurl) = get_block_urls($this->instance->id, $COURSE->id);
 
         //Get the unapproved url
         $approver = isset($this->config->approver) ? $this->config->approver : 0;
@@ -120,7 +112,6 @@ class block_appreciation extends block_base {
         $unapprovedurl = clone $listurl;
         $unapprovedurl->param('status', 'unapproved');
         $numunapproved = post::count_records(['instanceid' => $this->instance->id, 'approved' => 0, 'deleted' => 0]);
-        $showunapprovedbtn = ($isapprover && $numunapproved);
 
          // Get the thank yous.
         $displaynum = APPRECIATION_DISPLAYNUM;
@@ -141,7 +132,7 @@ class block_appreciation extends block_base {
 
         $list = new block_appreciation\external\list_exporter(null, $relateds);
         $data = array(
-            'isblockcontent' => true,
+            'filter' => array('block', true),
             'instanceid' => $this->instance->id,
             'list' => $list->export($OUTPUT),
             'listurl' => $listurl->out(false),
@@ -150,7 +141,6 @@ class block_appreciation extends block_base {
             'isapprover' => $isapprover,
             'numunapproved' => $numunapproved,
             'unapprovedurl' => $unapprovedurl->out(false),
-            'showunapprovedbtn' => $showunapprovedbtn,
         );
 
         // Render the appreciation list.

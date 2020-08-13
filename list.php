@@ -65,11 +65,8 @@ require_capability('block/appreciation:view', $blockcontext);
 $PAGE->requires->css(new moodle_url($CFG->wwwroot . '/blocks/appreciation/styles.css', array('nocache' => rand().rand())));
 $PAGE->requires->js( new moodle_url($CFG->wwwroot . '/blocks/appreciation/js/infinite-scroll.pkgd.min.js'), true );
 
-// Get the add new URL.
-$addnewurl = new moodle_url('/blocks/appreciation/post.php', array(
-    'instanceid' => $instanceid,
-    'courseid' => $courseid,
-));
+// Get the urls.
+list($listurl, $addnewurl) = get_block_urls($instanceid, $courseid);
 
 //Get the unapproved url
 $approver = isset($blockconfig->approver) ? $blockconfig->approver : 0;
@@ -77,7 +74,15 @@ $isapprover = ($USER->username == $approver);
 $unapprovedurl = clone $pageurl;
 $unapprovedurl->param('status', 'unapproved');
 $numunapproved = post::count_records(['instanceid' => $instanceid, 'approved' => 0, 'deleted' => 0]);
-$showunapprovedbtn = ($isapprover && $numunapproved);
+
+// Filter logic.
+$filter = array(
+    'all' => ($status == ''),
+    'unapproved' => ($status == 'unapproved'),
+    'byme' => ($status == 'byme'),
+    'forme' => ($status == 'forme'),
+    'foruser' => ($status == 'foruser'),
+);
 
  // Get the thank yous.
 $posts = array();
@@ -101,19 +106,18 @@ $relateds = [
     'page' => $page,
     'isapprover' => $isapprover,
 ];
-
 $list = new block_appreciation\external\list_exporter(null, $relateds);
 $data = array(
     'instanceid' => $instanceid,
 	'list' => $list->export($OUTPUT),
+    'listurl' => $listurl->out(false),
     'addnewurl' => $addnewurl->out(false),
     'canpost' => has_capability('block/appreciation:post', $blockcontext),
     'isapprover' => $isapprover,
     'numunapproved' => $numunapproved,
     'unapprovedurl' => $unapprovedurl->out(false),
-    'showunapprovedbtn' => $showunapprovedbtn,
+    'filter' => $filter,
 );
-
 // Render the appreciation list.
 echo $OUTPUT->render_from_template('block_appreciation/list', $data);
 

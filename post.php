@@ -51,10 +51,10 @@ $PAGE->set_url(
     )
 );
 $PAGE->set_context($coursecontext);
-$title = get_string('postform:postthankyou', 'block_appreciation');
+$title = get_string('title', 'block_appreciation');
 $PAGE->set_title($title);
 $PAGE->set_heading($title);
-$PAGE->navbar->add($title);
+$PAGE->navbar->add($title, new moodle_url('/blocks/appreciation/list.php', array('instanceid' => $instanceid, 'courseid' => $courseid)));
 
 // Check user is logged in and capable of posting.
 require_login($course, false);

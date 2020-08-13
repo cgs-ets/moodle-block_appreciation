@@ -77,18 +77,8 @@ $PAGE->navbar->add($title);
 require_login($course, false);
 require_capability('block/appreciation:view', $blockcontext);
 
-// Get the list url.
-$listurl = new \moodle_url('/blocks/appreciation/list.php', array(
-    'instanceid' => $instanceid,
-    'courseid' => $COURSE->id
-));
-
-// Get the add new URL.
-$addnewurl = new moodle_url('/blocks/appreciation/post.php', array(
-    'instanceid' => $instanceid,
-    'courseid' => $courseid,
-));
-
+// Get the urls.
+list($listurl, $addnewurl) = get_block_urls($instanceid, $courseid);
 
 // Add css.
 $PAGE->requires->css(new moodle_url($CFG->wwwroot . '/blocks/appreciation/styles.css', array('nocache' => rand().rand())));

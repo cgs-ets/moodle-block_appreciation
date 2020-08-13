@@ -36,14 +36,14 @@
         </div>
         <div class="meta">
             <div class="time">{{readabletime}}</div>
-            {{^isblockcontent}}
+            {{^filter.block}}
                 {{#isapprover}}
                     {{^isapproved}}<span class="action action-approve"><a href="#">Approve</a></span>{{/isapproved}}
                 {{/isapprover}}
                 {{#iscreator}}
                     <span class="action action-delete"><a href="#">Delete</a></span>
                 {{/iscreator}}
-            {{/isblockcontent}}
+            {{/filter.block}}
         </div>
         <div class="spinner"><div class="circle spin"></div></div>
     </div>
