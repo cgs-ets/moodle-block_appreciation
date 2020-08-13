@@ -71,6 +71,8 @@ class list_exporter extends exporter {
     protected static function define_related() {
         return [
             'context' => 'context',
+            'instanceid' => 'instanceid',
+            'courseid' => 'courseid',
             'posts' => 'block_appreciation\persistents\post[]',
             'page' => 'int',
             'isapprover' => 'bool',
@@ -102,7 +104,11 @@ class list_exporter extends exporter {
         // To minimise load time, we do not attempt to figure out how many posts.
         $totalcount = 999999999;
         $perpage = APPRECIATION_PERPAGE;
-        $pagingbar = new \paging_bar($totalcount, $this->related['page'], $perpage, 'list.php', 'page');
+        $baseurl = new \moodle_url('/blocks/appreciation/list.php', array(
+            'instanceid' => $this->related['instanceid'],
+            'courseid' => $this->related['courseid'],
+        ));
+        $pagingbar = new \paging_bar($totalcount, $this->related['page'], $perpage, $baseurl, 'page');
         $pagingbar->prepare($output, $PAGE, '');
         $nextpagelink = $pagingbar->nextlink;
 

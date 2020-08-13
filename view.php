@@ -102,6 +102,8 @@ $approver = isset($blockconfig->approver) ? $blockconfig->approver : 0;
 $isapprover = ($USER->username == $approver);
 $relateds = [
     'context' => $coursecontext,
+    'instanceid' => $instanceid,
+    'courseid' => $courseid,
 	'posts' => array($post),
     'page' => 0,
     'isapprover' => $isapprover,

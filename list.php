@@ -95,6 +95,8 @@ echo $OUTPUT->header();
 // Export the announcements list.
 $relateds = [
     'context' => $coursecontext,
+    'instanceid' => $instanceid,
+    'courseid' => $courseid,
 	'posts' => $posts,
     'page' => $page,
     'isapprover' => $isapprover,

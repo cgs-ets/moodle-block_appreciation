@@ -132,6 +132,8 @@ class block_appreciation extends block_base {
         // Export the announcements list.
         $relateds = [
             'context' => $coursecontext,
+            'instanceid' => $this->instance->id,
+            'courseid' => $COURSE->id,
             'posts' => $posts,
             'page' => 0,
             'isapprover' => $isapprover,
