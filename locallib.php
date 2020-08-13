@@ -39,7 +39,7 @@ function get_courseid_by_block_instance($instanceid) {
 	$courseid = $DB->get_field_sql($sql, $params);
 	//$course = get_course($courseid);
 
-	return $courseid;
+	return (int) $courseid;
 }
 
 /**

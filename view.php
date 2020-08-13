@@ -38,7 +38,7 @@ if (empty($post)) {
 }
 
 // Get the block instance config for the post.
-$instanceid = $post->get('instanceid');
+$instanceid = (int) $post->get('instanceid');
 $blockinstance = $DB->get_record('block_instances', array('id' => $instanceid), '*', MUST_EXIST);
 $blockconfig = unserialize(base64_decode($blockinstance->configdata));
 if (empty($blockinstance)) {
