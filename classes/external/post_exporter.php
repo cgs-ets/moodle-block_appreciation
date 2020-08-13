@@ -144,7 +144,7 @@ class post_exporter extends persistent_exporter {
 	    }
 
 	    // Is creator or recipient, because mustache does not allow logic.
-	    $iscreatororrecipient = ($isrecipient || $iscreator);
+	    $iscreatororrecipient = ($isrecipient || ($this->data->creator == $USER->username));
 
 	    // Does current user like this post?
 	    $doilike = false;
