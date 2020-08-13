@@ -92,6 +92,12 @@ class post_exporter extends persistent_exporter {
 	        'iscreator' => [
 	        	'type' => PARAM_BOOL,
 	        ],
+	        'isrecipient' => [
+	        	'type' => PARAM_BOOL,
+	        ],
+	        'iscreatororrecipient' => [
+	        	'type' => PARAM_BOOL,
+	        ],
             "isapproved" => [
                 'type' => PARAM_BOOL,
                 'default' => 0,
@@ -105,6 +111,13 @@ class post_exporter extends persistent_exporter {
 	        'viewurl' => [
 	        	'type' => PARAM_RAW,
 	        ],
+	        'numlikes' => [
+	        	'type' => PARAM_INT,
+	        ],
+            "doilike" => [
+                'type' => PARAM_BOOL,
+                'default' => 0,
+            ],
 	    ];
 	}
 
@@ -122,6 +135,28 @@ class post_exporter extends persistent_exporter {
 		if ($this->data->creator == $USER->username || $this->related['isapprover']) {
 			$iscreator = 1;
 		}
+
+
+	    // Is the user the recipient of this post.
+	    $isrecipient = false;
+	    if ($this->data->recipient == $USER->username) {
+	    	$isrecipient = true;
+	    }
+
+	    // Is creator or recipient, because mustache does not allow logic.
+	    $iscreatororrecipient = ($isrecipient || $iscreator);
+
+	    // Does current user like this post?
+	    $doilike = false;
+	    if (!$iscreatororrecipient) {
+	    	$doilike = $DB->record_exists('block_appreciation_likes', array('postid' => $this->data->id, 'username' => $USER->username));
+	    }
+
+	   	// Number of likes for this post. Only relevant to recipient.
+	   	$numlikes = 0;
+	   	if ($iscreatororrecipient) {
+	    	$numlikes = $DB->count_records('block_appreciation_likes', array('postid' => $this->data->id));
+	    }
 
 		// Author meta.
         $creator = $DB->get_record('user', array('username'=>$this->data->creator));
@@ -165,9 +200,13 @@ class post_exporter extends persistent_exporter {
 	        'readabletime' => $readabletime,
 	        'iscreator' => $iscreator,
 	        'isapproved' => $isapproved,
+	        'isrecipient' => $isrecipient,
+	        'iscreatororrecipient' => $iscreatororrecipient,
 	        'messagetokenized' => $messagetokenized,
 	        'messageplain' => $messageplain,
 	        'viewurl' => $viewurl,
+	        'numlikes' => $numlikes,
+	        'doilike' => $doilike,
 	    ];
 	}
 

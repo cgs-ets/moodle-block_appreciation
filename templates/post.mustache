@@ -55,10 +55,12 @@
     </div>
     <div class="footer">
         {{#isapproved}}
-        {{!
-            <div class="heart"></div>
-            <div style="font-size: 11px;display: inline-block;padding: 10px;">Liked by Michael Vangelovski</div>
-        }}
+            {{^iscreatororrecipient}}<div class="heart{{#doilike}} is_selected{{/doilike}}"></div>{{/iscreatororrecipient}}
+            {{#iscreatororrecipient}}
+                {{#numlikes}}
+                    <div class="numlikes"><a href="#" class="action action-getlikeusers">{{#str}} list:numlikes, block_appreciation, {{numlikes}} {{/str}}</a></div>
+                {{/numlikes}}
+            {{/iscreatororrecipient}}
         {{/isapproved}}
     </div>
 </div>

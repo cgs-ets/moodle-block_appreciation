@@ -54,6 +54,8 @@ $string['list:postnotfound'] = 'Post not found. It may have been deleted.';
 $string['list:blocknotfound'] = 'Block not found. It may have been deleted.';
 $string['list:coursenotfound'] = 'Course not found. It may have been deleted.';
 $string['list:viewall'] = 'View all';
+$string['list:numlikes'] = 'Liked by {$a} people';
+$string['list:likes'] = 'Likes';
 
 $string['notification:subject'] = '{$a->siteshortname}: {$a->creatorfullname} has thanked you.';
 $string['messageprovider:notifications'] = 'Appreciation (Thank you) post notifications';

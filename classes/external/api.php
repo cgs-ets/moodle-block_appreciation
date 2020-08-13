@@ -43,5 +43,8 @@ class api extends external_api {
     use get_recipient_users;
     use approve_post;
     use delete_post;
+    use like_post;
+    use unlike_post;
+    use get_like_users;
     
 }

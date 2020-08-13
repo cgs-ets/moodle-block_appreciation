@@ -166,9 +166,13 @@
 .block_appreciation .bapp-list .post.removing {
     background-color: #bbbbbb;
 }
-
 .block_appreciation .bapp-list .post.unapproved .footer {
     display: none;
+}
+.block_appreciation .bapp-list .post .footer .numlikes {
+    font-size: 11px;
+    display: inline-block;
+    padding: 10px;
 }
 
 /* Heart */
@@ -182,15 +186,12 @@
     background-size:2900%;
     display: block;
 }
-
-
 .block_appreciation .bapp-list .post .footer .heart.is_selected {
     background-position:right;
 }
-.is_animating {
+.block_appreciation .bapp-list .post .footer .heart.is_animating {
     animation: bapp-heart-burst .8s steps(28) 1;
 }
-
 @keyframes bapp-heart-burst {
     from {background-position:left;}
     to { background-position:right;}
@@ -241,4 +242,23 @@
 }
 
 
-
+/* Loader */;
+.block_appreciation .loader {
+    display: none;
+    float: left;
+    padding: 40px 0 40px;
+    width: 100%;
+    
+}
+.block_appreciation .loader .circle {
+    display: block;
+    position: relative;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 1px solid transparent;
+    border-top-color: #595959;
+    border-left-color: #595959;
+    text-indent: -9999px;
+    margin: 0 auto;
+}

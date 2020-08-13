@@ -39,6 +39,9 @@ class post extends persistent {
     /** Table to store this persistent model instances. */
     const TABLE = 'block_appreciation_posts';
 
+        /** Related tables. */
+    const TABLE_LIKES = 'block_appreciation_likes';
+
     /**
      * Return the definition of the properties of this model.
      *
@@ -289,6 +292,66 @@ class post extends persistent {
             'Auto-Submitted: auto-generated',
         ];
         return $headers;
+    }
+
+
+    public static function like($postid) {
+        global $DB, $USER;
+
+        // Ensure the post exists.
+        $post = new static($postid);
+        if (empty($post)) {
+            return;
+        }
+
+        // Like the post.
+        $time = time();
+        $data = new \stdClass();
+        $data->postid = $postid;
+        $data->username = $USER->username;
+        $data->timecreated = $time;
+        $data->timemodified = $time;
+        $id = $DB->insert_record('block_appreciation_likes', $data);
+        return $id;
+
+    }
+
+    public static function unlike($postid) {
+        global $DB, $USER;
+
+        // Ensure the post exists.
+        $post = new static($postid);
+        if (empty($post)) {
+            return;
+        }
+
+        // Unlike the post.
+        $DB->delete_records('block_appreciation_likes', array('postid' => $postid, 'username' => $USER->username));
+
+    }
+
+
+    
+    /**
+    * Gets the users that liked the post.
+    *
+    * @param int $postid.
+    * @return array.
+    */
+    public static function get_like_users($postid) {
+        global $DB;
+        // Fetch posts_users records
+        $sql = "SELECT *
+                  FROM {" . static::TABLE_LIKES . "}
+                 WHERE postid = ?";
+        $params = array($postid);
+        $postusers = $DB->get_records_sql($sql, $params);
+        // Convert to user records
+        $users = array();
+        foreach ($postusers as $postuser) {
+            $users[] = $DB->get_record('user', array('username'=>$postuser->username));
+        }
+        return $users;
     }
 
 
