@@ -129,7 +129,7 @@ class block_appreciation extends block_base {
         }
         $posts = post::get_for_user($this->instance->id, $isapprover, 0, $displaynum);
 
-        // Export the announcements list.
+        // Export the appreciation list.
         $relateds = [
             'context' => $coursecontext,
             'instanceid' => $this->instance->id,

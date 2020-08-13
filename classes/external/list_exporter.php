@@ -71,8 +71,8 @@ class list_exporter extends exporter {
     protected static function define_related() {
         return [
             'context' => 'context',
-            'instanceid' => 'instanceid',
-            'courseid' => 'courseid',
+            'instanceid' => 'string',
+            'courseid' => 'string',
             'posts' => 'block_appreciation\persistents\post[]',
             'page' => 'int',
             'isapprover' => 'bool',
@@ -89,7 +89,7 @@ class list_exporter extends exporter {
         global $PAGE;
 
         $posts = [];
-        // Export each announcement in the list
+        // Export each post in the list
         foreach ($this->related['posts'] as $post) {
             $postexporter = new post_exporter($post, [
                 'context' => $this->related['context'],
