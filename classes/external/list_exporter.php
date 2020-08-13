@@ -71,8 +71,8 @@ class list_exporter extends exporter {
     protected static function define_related() {
         return [
             'context' => 'context',
-            'instanceid' => 'string',
-            'courseid' => 'string',
+            'instanceid' => 'int',
+            'courseid' => 'int',
             'posts' => 'block_appreciation\persistents\post[]',
             'page' => 'int',
             'isapprover' => 'bool',
