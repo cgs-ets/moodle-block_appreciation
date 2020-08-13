@@ -30,7 +30,7 @@
             <div class="userphoto"><a href="{{creatorurl}}" title="{{creatorfullname}} profile"><img src="{{creatorphoto}}" alt="{{creatorfullname}}" title="{{creatorfullname}}" /></a></div>
             <div class="fullname">{{creatorfullname}}</div>
         </div>
-        <div class="recipient">
+        <div class="recipient confettis-on" data-confettis>
             <div class="userphoto"><a href="{{recipienturl}}" title="{{recipientfullname}} profile"><img src="{{recipientphoto}}" alt="{{recipientfullname}}" title="{{recipientfullname}}" /></a></div>
             <div class="fullname">{{recipientfullname}}</div>
         </div>
@@ -52,5 +52,13 @@
    
     <div class="message">
         {{{message}}}
+    </div>
+    <div class="footer">
+        {{#isapproved}}
+        {{!
+            <div class="heart"></div>
+            <div style="font-size: 11px;display: inline-block;padding: 10px;">Liked by Michael Vangelovski</div>
+        }}
+        {{/isapproved}}
     </div>
 </div>

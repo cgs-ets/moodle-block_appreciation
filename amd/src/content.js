@@ -71,6 +71,30 @@ define(['jquery', 'core/log', 'core/ajax'], function($, Log, Ajax) {
             var button = $(this);
             self.delete(button);
         });
+
+
+        self.rootel.on('click touchstart', '.heart', function() {
+            var heart = $(this);
+
+            if (heart.hasClass('is_animating')) {
+                return;
+            }
+
+            if (heart.hasClass('is_selected')) {
+                heart.removeClass('is_selected');
+            } else {
+                heart.toggleClass('is_animating');
+            }
+        });
+
+        self.rootel.on('animationend', '.heart', function() {
+            var heart = $(this);
+            heart.toggleClass('is_animating');
+            if (!heart.hasClass('is_selected')) {
+                heart.addClass('is_selected');
+            }
+        });
+
     };
 
     /**

@@ -81,7 +81,9 @@
     padding: 10px 15px;
     overflow: hidden;
 }
-
+.block_appreciation .bapp-list .post .footer {
+    border-top: 1px solid #e4e6e8;
+}
 .block_appreciation .bapp-list .post .note {
     display: none;
     font-style: italic;
@@ -92,6 +94,9 @@
 .block_appreciation .bapp-list .post .seperator,
 .block_appreciation .bapp-list .post .recipient {
     display: inline-block;
+}
+.block_appreciation .bapp-list .post .recipient {
+    font-weight: 600;
 }
 .block_appreciation .bapp-list .post .header .fullname {
     white-space: nowrap;
@@ -161,7 +166,38 @@
 .block_appreciation .bapp-list .post.removing {
     background-color: #bbbbbb;
 }
-/* Helpers */
+
+.block_appreciation .bapp-list .post.unapproved .footer {
+    display: none;
+}
+
+/* Heart */
+.block_appreciation .bapp-list .post .footer .heart {
+    cursor: pointer;
+    height: 50px;
+    width: 50px;
+    background-image:url('/blocks/appreciation/pix/heart.png');
+    background-position: left;
+    background-repeat:no-repeat;
+    background-size:2900%;
+    display: block;
+}
+
+
+.block_appreciation .bapp-list .post .footer .heart.is_selected {
+    background-position:right;
+}
+.is_animating {
+    animation: bapp-heart-burst .8s steps(28) 1;
+}
+
+@keyframes bapp-heart-burst {
+    from {background-position:left;}
+    to { background-position:right;}
+}
+
+
+/* Spinner */
 .block_appreciation .spinner {
     display: none;
     padding: 0;
@@ -203,3 +239,6 @@
     from {transform:rotate(0deg);}
     to {transform:rotate(360deg);}
 }
+
+
+
