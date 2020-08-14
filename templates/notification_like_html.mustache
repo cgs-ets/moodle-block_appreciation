@@ -180,48 +180,24 @@
                                                     <table data-id="{{post.id}}" class="post-content" border="0" cellspacing="0" cellpadding="0" width="100%">
                                                         <tbody>
                                                             <tr>
-                                                                <td>
-                                                                    <table class="metainfo" border="0" cellspacing="0" cellpadding="0" width="100%">
-                                                                        <tbody>
-                                                                            <tr>
-                                                                                <td class="time">{{post.readabletime}}</td>
-                                                                            </tr>
-                                                                        </tbody>
-                                                                    </table>  
+                                                                <td>  
                                                                     <table class="subject" border="0" cellspacing="0" cellpadding="0" width="100%">
                                                                         <tbody>
                                                                             <tr>
-                                                                                <td>You have received a new thank you!</td>
+                                                                                <td>{{subject}}</td>
                                                                             </tr>
                                                                             <tr> 
                                                                                 <td height="10"></td> 
                                                                             </tr>
                                                                         </tbody>
                                                                     </table>
-                                                                    <table class="author" border="0" cellspacing="0" cellpadding="0" width="100%">
-                                                                        <tbody>
-                                                                            <tr>
-                                                                                <td width="45" valign="top" class="userpicture left">{{{ post.creatorphototokenised }}}</td>
-                                                                                <td>{{post.creatorfullname}}</td>
-                                                                            </tr>
-                                                                        </tbody>
-                                                                    </table>     
-                                                                    <table class="message" border="0" cellspacing="0" cellpadding="0" width="100%">
-                                                                        <tbody>
-                                                                            <tr>
-                                                                                <td>
-                                                                                    {{{post.messagetokenized}}}
-                                                                                </td>
-                                                                            </tr>
-                                                                        </tbody>
-                                                                    </table>
                                                                     <table class="viewonline" border="0" cellspacing="0" cellpadding="0" width="100%">
                                                                         <tbody>
                                                                             <tr>
-                                                                                <td><a href="{{post.viewurl}}">View on {{a.siteshortname}}</a></td>
+                                                                                <td><a href="{{post.viewurl}}">View the post on {{a.siteshortname}}</a></td>
                                                                             </tr>
                                                                         </tbody>
-                                                                    </table>  
+                                                                    </table>
                                                                 </td>
                                                             </tr>
                                                         </tbody>

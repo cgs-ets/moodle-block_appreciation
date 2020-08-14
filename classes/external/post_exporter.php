@@ -30,7 +30,6 @@ use core\external\persistent_exporter;
 use renderer_base;
 use \block_appreciation\persistents\post;
 
-
 /**
  * Exporter of a single post
  */
@@ -98,6 +97,9 @@ class post_exporter extends persistent_exporter {
 	        'iscreatororrecipient' => [
 	        	'type' => PARAM_BOOL,
 	        ],
+	        'iscreatororapprover' => [
+	        	'type' => PARAM_BOOL,
+	        ],
             "isapproved" => [
                 'type' => PARAM_BOOL,
                 'default' => 0,
@@ -132,10 +134,15 @@ class post_exporter extends persistent_exporter {
 
 		// Check if user is the creator of this post.
 		$iscreator = 0;
-		if ($this->data->creator == $USER->username || $this->related['isapprover']) {
+		if ($this->data->creator == $USER->username) {
 			$iscreator = 1;
 		}
 
+		// Check if user is the creator of this post.
+		$iscreatororapprover = 0;
+		if ($iscreator || $this->related['isapprover']) {
+			$iscreatororapprover = 1;
+		}
 
 	    // Is the user the recipient of this post.
 	    $isrecipient = false;
@@ -202,6 +209,7 @@ class post_exporter extends persistent_exporter {
 	        'isapproved' => $isapproved,
 	        'isrecipient' => $isrecipient,
 	        'iscreatororrecipient' => $iscreatororrecipient,
+	        'iscreatororapprover' => $iscreatororapprover,
 	        'messagetokenized' => $messagetokenized,
 	        'messageplain' => $messageplain,
 	        'viewurl' => $viewurl,

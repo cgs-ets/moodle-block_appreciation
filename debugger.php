@@ -54,11 +54,14 @@ $output = '';
 
 
 
-echo "<pre>";
-$api = new block_appreciation\external\api;
-$out = $api->approve_post(4);
-var_export($out);
+\block_appreciation\persistents\post::like(4);
 exit;
+
+//echo "<pre>";
+//$api = new block_appreciation\external\api;
+//$out = $api->approve_post(4);
+//var_export($out);
+//exit;
 
 
 

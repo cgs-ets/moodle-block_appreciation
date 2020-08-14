@@ -58,5 +58,7 @@ $string['list:numlikes'] = 'Liked by {$a} people';
 $string['list:likes'] = 'Likes';
 
 $string['notification:subject'] = '{$a->siteshortname}: {$a->creatorfullname} has thanked you.';
+$string['notification_like:subject'] = '{$a->likefullname} liked your thank you post.';
 $string['messageprovider:notifications'] = 'Appreciation (Thank you) post notifications';
+$string['messageprovider:likes'] = 'Appreciation (Thank you) "likes" notifications';
 
