@@ -110,7 +110,7 @@ class post extends persistent {
             $params[] = $USER->username;
         }
 
-        $sql .= " ORDER BY timemodified DESC";
+        $sql .= " ORDER BY timecreated DESC";
         
         $posts = array();
         $recordset = $DB->get_recordset_sql($sql, $params, $from, $perpage);
