@@ -62,7 +62,6 @@ $coursecontext = context_course::instance($courseid);
 
 // Set up page parameters.
 $PAGE->set_course($course);
-$PAGE->requires->css('/blocks/appreciation/styles.css');
 $pageurl = new moodle_url('/blocks/appreciation/view.php', array(
     'id' => $postid,
 ));
@@ -81,8 +80,7 @@ require_capability('block/appreciation:view', $blockcontext);
 list($listurl, $addnewurl) = get_block_urls($instanceid, $courseid);
 
 // Add css.
-$PAGE->requires->css(new moodle_url($CFG->wwwroot . '/blocks/appreciation/styles.css', array('nocache' => rand().rand())));
-
+$PAGE->requires->css('/blocks/appreciation/styles.css');
 
 // Build the output.
 echo $OUTPUT->header();

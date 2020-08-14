@@ -44,7 +44,6 @@ $blockcontext = context_block::instance($instanceid);
 
 // Set up page parameters.
 $PAGE->set_course($course);
-$PAGE->requires->css('/blocks/appreciation/styles.css');
 $pageurl = new moodle_url('/blocks/appreciation/list.php', array(
     'instanceid' => $instanceid,
     'courseid' => $courseid,
@@ -61,8 +60,9 @@ $PAGE->navbar->add($title);
 require_login($course, false);
 require_capability('block/appreciation:view', $blockcontext);
 
-// Add css.
-$PAGE->requires->css(new moodle_url($CFG->wwwroot . '/blocks/appreciation/styles.css', array('nocache' => rand().rand())));
+// Add css
+$PAGE->requires->css('/blocks/appreciation/styles.css');
+// Add extra js.
 $PAGE->requires->js( new moodle_url($CFG->wwwroot . '/blocks/appreciation/js/infinite-scroll.pkgd.min.js'), true );
 
 // Get the urls.

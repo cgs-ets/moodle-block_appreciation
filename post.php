@@ -42,7 +42,6 @@ $blockcontext = context_block::instance($instanceid);
 
 // Set up page parameters.
 $PAGE->set_course($course);
-$PAGE->requires->css('/blocks/appreciation/styles.css');
 $PAGE->set_url(
     '/blocks/appreciation/post.php',
     array(
@@ -128,7 +127,7 @@ if ($formdata = $formpost->get_data()) {
 }
 
 // Add css.
-$PAGE->requires->css(new moodle_url($CFG->wwwroot . '/blocks/appreciation/styles.css', array('nocache' => rand().rand())));
+$PAGE->requires->css('/blocks/appreciation/styles.css');
 
 echo $OUTPUT->header();
 
