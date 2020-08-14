@@ -172,13 +172,13 @@
 }
 .block_appreciation .bapp-list .post .footer .numlikes {
     font-size: 11px;
-    padding: 0;
+    padding-left: 10px;
     display: inline-block;
     float: left;
     line-height: 50px;
 }
 .block_appreciation .bapp-footer a.next {
-  display: none;
+    display: none;
 }
 
 /* Heart */
