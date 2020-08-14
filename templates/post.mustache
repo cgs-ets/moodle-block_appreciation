@@ -55,7 +55,7 @@
     </div>
     <div class="footer">
         {{#isapproved}}
-            {{^iscreatororrecipient}}<div class="heart{{#doilike}} is_selected{{/doilike}}"></div>{{/iscreatororrecipient}}
+            {{^iscreator}}<div class="heart{{#doilike}} is_selected{{/doilike}}"></div>{{/iscreator}}
             {{#iscreatororrecipient}}
                 {{#numlikes}}
                     <div class="numlikes"><a href="#" class="action action-getlikeusers">{{#str}} list:numlikes, block_appreciation, {{numlikes}} {{/str}}</a></div>
