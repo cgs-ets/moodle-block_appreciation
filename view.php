@@ -80,7 +80,7 @@ require_capability('block/appreciation:view', $blockcontext);
 list($listurl, $addnewurl) = get_block_urls($instanceid, $courseid);
 
 // Add css.
-$PAGE->requires->css('/blocks/appreciation/styles.css');
+$PAGE->requires->css(new moodle_url($CFG->wwwroot . '/blocks/appreciation/styles.css', array('nocache' => rand())));
 
 // Build the output.
 echo $OUTPUT->header();

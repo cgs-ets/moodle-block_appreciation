@@ -40,7 +40,7 @@ $PAGE->set_heading($title);
 $PAGE->set_title($SITE->fullname . ': ' . $title);
 $PAGE->navbar->add($title);
 // Add css
-$PAGE->requires->css(new moodle_url($CFG->wwwroot . '/block/appreciation/styles.css', array('nocache' => rand().rand())));
+$PAGE->requires->css(new moodle_url($CFG->wwwroot . '/blocks/appreciation/styles.css', array('nocache' => rand())));
 
 // Check user is logged in.
 require_login();

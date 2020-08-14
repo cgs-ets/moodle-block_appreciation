@@ -127,7 +127,8 @@ if ($formdata = $formpost->get_data()) {
 }
 
 // Add css.
-$PAGE->requires->css('/blocks/appreciation/styles.css');
+//$PAGE->requires->css('/blocks/appreciation/styles.css');
+$PAGE->requires->css(new moodle_url($CFG->wwwroot . '/blocks/appreciation/styles.css', array('nocache' => rand())));
 
 echo $OUTPUT->header();
 
