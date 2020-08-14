@@ -148,7 +148,7 @@ class post_exporter extends persistent_exporter {
 
 	    // Does current user like this post?
 	    $doilike = false;
-	    if (!$iscreatororrecipient) {
+	    if (!$iscreator) {
 	    	$doilike = $DB->record_exists('block_appreciation_likes', array('postid' => $this->data->id, 'username' => $USER->username));
 	    }
 
