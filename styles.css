@@ -83,6 +83,7 @@
 }
 .block_appreciation .bapp-list .post .footer {
     border-top: 1px solid #e4e6e8;
+    overflow: hidden;
 }
 .block_appreciation .bapp-list .post .note {
     display: none;
@@ -171,8 +172,10 @@
 }
 .block_appreciation .bapp-list .post .footer .numlikes {
     font-size: 11px;
+    padding: 0;
     display: inline-block;
-    padding: 10px;
+    float: left;
+    line-height: 50px;
 }
 .block_appreciation .bapp-footer a.next {
   display: none;
@@ -188,6 +191,7 @@
     background-repeat:no-repeat;
     background-size:2900%;
     display: block;
+    float: left;
 }
 .block_appreciation .bapp-list .post .footer .heart.is_selected {
     background-position:right;

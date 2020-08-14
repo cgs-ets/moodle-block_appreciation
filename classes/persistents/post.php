@@ -304,6 +304,12 @@ class post extends persistent {
             return;
         }
 
+        // Check if like already exists.
+        $doilike = $DB->record_exists('block_appreciation_likes', array('postid' => $postid, 'username' => $USER->username));
+        if ($doilike) {
+            return;
+        }
+
         // Like the post.
         $time = time();
         $data = new \stdClass();
