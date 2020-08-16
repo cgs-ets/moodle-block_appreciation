@@ -269,3 +269,11 @@
     text-indent: -9999px;
     margin: 0 auto;
 }
+
+/* Print */
+@media print  
+{
+    .block_appreciation .post {
+        page-break-inside: avoid;
+    }
+}
