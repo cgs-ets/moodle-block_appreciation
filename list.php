@@ -31,7 +31,8 @@ use \block_appreciation\persistents\post;
 $instanceid = required_param('instanceid', PARAM_INT);
 $courseid   = required_param('courseid', PARAM_INT);
 $page = optional_param('page', 0, PARAM_INT);
-$status = optional_param('status', '', PARAM_TEXT);
+$filter = optional_param('filter', '', PARAM_TEXT);
+$filterval = optional_param('filterval', '', PARAM_RAW);
 
 // Determine course and context.
 $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
@@ -48,6 +49,8 @@ $pageurl = new moodle_url('/blocks/appreciation/list.php', array(
     'instanceid' => $instanceid,
     'courseid' => $courseid,
     'page' => $page,
+    'filter' => $filter,
+    'filterval' => $filterval,
 ));
 $PAGE->set_url($pageurl);
 $PAGE->set_context($coursecontext);
@@ -71,33 +74,15 @@ list($listurl, $addnewurl) = get_block_urls($instanceid, $courseid);
 //Get the unapproved url
 $approver = isset($blockconfig->approver) ? $blockconfig->approver : 0;
 $isapprover = ($USER->username == $approver);
-$unapprovedurl = clone $pageurl;
-$unapprovedurl->param('status', 'unapproved');
 $numunapproved = post::count_records(['instanceid' => $instanceid, 'approved' => 0, 'deleted' => 0]);
 
-// Filter logic.
-$filter = array(
-    'all' => ($status == ''),
-    'unapproved' => ($status == 'unapproved'),
-    'byme' => ($status == 'byme'),
-    'forme' => ($status == 'forme'),
-    'foruser' => ($status == 'foruser'),
-);
-
- // Get the thank yous.
-$posts = array();
-if ($status == 'unapproved') {
-    if ($isapprover) {
-        $posts = post::get_for_approval($instanceid, $page);
-    }
-} else {
-    $posts = post::get_for_user($instanceid, $isapprover, $page);
-}
+// Get the thank yous.
+$posts = post::get_by_filter($instanceid, $filter, $filterval, $page);
 
 // Build the output.
 echo $OUTPUT->header();
 
-// Export the announcements list.
+// Set up relateds for list exporter.
 $relateds = [
     'context' => $coursecontext,
     'instanceid' => $instanceid,
@@ -105,8 +90,26 @@ $relateds = [
 	'posts' => $posts,
     'page' => $page,
     'isapprover' => $isapprover,
+    'baseurl' => $pageurl,
 ];
+
+// Export the list.
 $list = new block_appreciation\external\list_exporter(null, $relateds);
+
+// Set up filter logic for template.
+$filterlogic = new \stdClass();
+$filterlogic->block = false;
+$filterlogic->all = ($filter == '');
+$filterlogic->unapproved = ($filter == 'unapproved');
+$filterlogic->byme = ($filter == 'byme');
+$filterlogic->forme = ($filter == 'forme');
+$filterlogic->foruser = ($filter == 'foruser');
+$filterlogic->thisweek = ($filter == 'thisweek');
+$filterlogic->filter = $filter;
+$filterlogic->filterval = $filterval;
+$filterlogic->filterstr =  $filter ? get_string('list:'.$filter, 'block_appreciation', $filterval) : '';
+
+// Set up the template data.
 $data = array(
     'instanceid' => $instanceid,
 	'list' => $list->export($OUTPUT),
@@ -115,9 +118,9 @@ $data = array(
     'canpost' => has_capability('block/appreciation:post', $blockcontext),
     'isapprover' => $isapprover,
     'numunapproved' => $numunapproved,
-    'unapprovedurl' => $unapprovedurl->out(false),
-    'filter' => $filter,
+    'filter' => $filterlogic,
 );
+
 // Render the appreciation list.
 echo $OUTPUT->render_from_template('block_appreciation/list', $data);
 

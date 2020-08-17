@@ -95,6 +95,7 @@ $relateds = [
 	'posts' => array($post),
     'page' => 0,
     'isapprover' => $isapprover,
+    'baseurl' => $listurl,
 ];
 
 $list = new block_appreciation\external\list_exporter(null, $relateds);

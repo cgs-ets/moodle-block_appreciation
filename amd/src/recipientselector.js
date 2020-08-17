@@ -43,6 +43,8 @@ define(['jquery', 'core/log', 'core/ajax', 'core/templates', 'core/str'], functi
 
         var recipientselector = new RecipientSelector(rootel, instanceid);
         recipientselector.main();
+
+        return recipientselector;
     }
 
     /**
@@ -168,8 +170,6 @@ define(['jquery', 'core/log', 'core/ajax', 'core/templates', 'core/str'], functi
         var json = input.val();
         if(json) {
             var tag = JSON.parse(json);
-
-            console.log(tag);
             // Render the tag from a template.
             Templates.render('block_appreciation/recipient_selector_tag', tag)
                 .then(function(html) {

@@ -40,7 +40,6 @@ class block_appreciation_edit_form extends block_edit_form
         $type = 'text';
         $name = 'config_displaynum';
         $title = get_string('config:displaynum', 'block_appreciation');
-        $desc = get_string('config:displaynumdesc', 'block_appreciation');
         $mform->addElement($type, $name, $title, $desc);
         $mform->setType('config_displaynum', PARAM_INT);
         $mform->addRule('config_displaynum', get_string('err_numeric', 'form'), 'numeric', null, 'client');
@@ -49,9 +48,23 @@ class block_appreciation_edit_form extends block_edit_form
         $type = 'text';
         $name = 'config_approver';
         $title = get_string('config:approver', 'block_appreciation');
-        $desc = get_string('config:approverdesc', 'block_appreciation');
         $mform->addElement($type, $name, $title, $desc);
         $mform->setType('config_approver', PARAM_RAW);
+
+        // Week start day.
+        $type = 'select';
+        $name = 'config_weekstartday';
+        $title = get_string('config:weekstartday', 'block_appreciation');
+        $options = array('', 'Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday');
+        $mform->addElement($type, $name, $title, $options);
+        $mform->setType('config_weekstartday', PARAM_RAW);
+
+        // Week start time.
+        $type = 'text';
+        $name = 'config_weekstarttime';
+        $title = get_string('config:weekstarttime', 'block_appreciation');
+        $mform->addElement($type, $name, $title, $desc);
+        $mform->setType('config_weekstarttime', PARAM_RAW);
     }
 
 }

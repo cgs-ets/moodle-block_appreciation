@@ -19,21 +19,14 @@
     @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
 }}
 {{!
-    @template block_appreciation/recipient_selector
+    @template block_appreciation/recipient_selector_plain
 
-    View for the recipient autocomplete field.
+    View for the recipient autocomplete field without any additional elements.
 }}
-<div class="recipient-selector row form-group">
-    <div class="col-md-3">
-        <label class="col-form-label d-inline " for="recipient-autocomplete">
-            {{#str}}postform:recipient, block_appreciation{{/str}}
-        </label>
-    </div>
-    <div class="col-md-9">
-        <div class="recipient-selection"></div>
-        <input type="text" name="recipient-autocomplete" class="form-control recipient-autocomplete" placeholder="{{#str}}postform:recipientplaceholder, block_appreciation{{/str}}" aria-expanded="false" autocomplete="off" autocorrect="off" autocapitalize="off" aria-autocomplete="list">
-        <div class="recipient-results">
-            {{>block_appreciation/recipient_selector_results}}
-        </div>
+<div class="recipient-selector">
+    <div class="recipient-selection"></div>
+    <input type="text" name="recipient-autocomplete" class="form-control recipient-autocomplete" placeholder="{{#str}}postform:recipientplaceholder, block_appreciation{{/str}}" aria-expanded="false" autocomplete="off" autocorrect="off" autocapitalize="off" aria-autocomplete="list">
+    <div class="recipient-results">
+        {{>block_appreciation/recipient_selector_results}}
     </div>
 </div>

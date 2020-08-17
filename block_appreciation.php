@@ -106,11 +106,9 @@ class block_appreciation extends block_base {
         // Get the urls.
         list($listurl, $addnewurl) = get_block_urls($this->instance->id, $COURSE->id);
 
-        //Get the unapproved url
+        // Check for unapproved items.
         $approver = isset($this->config->approver) ? $this->config->approver : 0;
         $isapprover = ($USER->username == $approver);
-        $unapprovedurl = clone $listurl;
-        $unapprovedurl->param('status', 'unapproved');
         $numunapproved = post::count_records(['instanceid' => $this->instance->id, 'approved' => 0, 'deleted' => 0]);
 
          // Get the thank yous.
@@ -118,7 +116,11 @@ class block_appreciation extends block_base {
         if (isset($this->config->displaynum)) {
             $displaynum = $this->config->displaynum;
         }
-        $posts = post::get_for_user($this->instance->id, $isapprover, 0, $displaynum);
+        $posts = post::get_all($this->instance->id, 0, $displaynum);
+
+        // Set up filter logic for template.
+        $filter = new stdClass();
+        $filter->block = true;
 
         // Export the appreciation list.
         $relateds = [
@@ -128,11 +130,11 @@ class block_appreciation extends block_base {
             'posts' => $posts,
             'page' => 0,
             'isapprover' => $isapprover,
+            'baseurl' => $listurl,
         ];
 
         $list = new block_appreciation\external\list_exporter(null, $relateds);
         $data = array(
-            'filter' => array('block', true),
             'instanceid' => $this->instance->id,
             'list' => $list->export($OUTPUT),
             'listurl' => $listurl->out(false),
@@ -140,15 +142,11 @@ class block_appreciation extends block_base {
             'canpost' => has_capability('block/appreciation:post', $this->context),
             'isapprover' => $isapprover,
             'numunapproved' => $numunapproved,
-            'unapprovedurl' => $unapprovedurl->out(false),
+            'filter' => $filter,
         );
 
         // Render the appreciation list.
         $this->content->text = $OUTPUT->render_from_template('block_appreciation/list', $data);
-
-
-
-
 
         return $this->content;
     }

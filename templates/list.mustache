@@ -26,15 +26,28 @@
 
 <div class="block_appreciation" data-region="block_appreciation-instance-{{instanceid}}">
     <div class="bapp-header">
-        
-        {{^filter.all}}
-            <a id="btn-viewall" class="btn btn-secondary" href="{{listurl}}">{{#str}} list:viewall, block_appreciation {{/str}}</a>
-        {{/filter.all}}
-        
-        {{^filter.unapproved}}{{#isapprover}}{{#numunapproved}}<a id="btn-viewunapproved" class="btn btn-secondary" href="{{unapprovedurl}}">{{#str}} viewunapproved, block_appreciation, {{numunapproved}} {{/str}}</a>{{/numunapproved}}{{/isapprover}}{{/filter.unapproved}}
+        <h4 class="filter-title">{{filter.filterstr}}</h4>
 
         <a id="btn-newpost" class="btn btn-primary" href="{{addnewurl}}">{{#str}} addnew, block_appreciation {{/str}}</a>
-        
+
+        <div class="filter dropdown">
+            <button class="btn btn-secondary actions-dropdown" type="button" id="actions-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></button>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="actions-dropdown">
+                {{^filter.all}}<a class="dropdown-item filter-all" href="{{listurl}}">{{#str}} list:viewall, block_appreciation {{/str}}</a>{{/filter.all}}
+                {{^filter.forme}}<a class="dropdown-item filter-forme" href="{{listurl}}&filter=forme">{{#str}} list:forme, block_appreciation {{/str}}</a>{{/filter.forme}}
+                {{^filter.byme}}<a class="dropdown-item filter-byme" href="{{listurl}}&filter=byme">{{#str}} list:byme, block_appreciation {{/str}}</a>{{/filter.byme}}
+                {{^filter.thisweek}}<a class="dropdown-item filter-thisweek" href="{{listurl}}&filter=thisweek">{{#str}} list:thisweek, block_appreciation {{/str}}</a>{{/filter.thisweek}}
+                {{^filter.unapproved}}{{#isapprover}}{{#numunapproved}}
+                    <a class="dropdown-item filter-unapproved" href="{{listurl}}&filter=unapproved">{{#str}} list:unapproved, block_appreciation, {{numunapproved}} {{/str}}</a>
+                {{/numunapproved}}{{/isapprover}}{{/filter.unapproved}}
+                {{^filter.block}}
+                    <div class="user-selector dropdown-item" data-action-base="{{listurl}}&filter=foruser&filterval=">
+                        <input type="hidden" name="recipient">
+                        {{>block_appreciation/recipient_selector_plain}}
+                    </div>
+                {{/filter.block}}
+            </div>
+        </div>
     </div>
     <div class="bapp-list">
     {{#list}}

@@ -20,8 +20,8 @@
  */
 
 define(['jquery', 'core/log', 'core/ajax','core/templates', 
-        'core/str', 'core/modal_factory', 'core/modal_events' ], 
-        function($, Log, Ajax, Templates, Str, ModalFactory, ModalEvents) {    
+        'core/str', 'core/modal_factory', 'core/modal_events', 'block_appreciation/recipientselector' ], 
+        function($, Log, Ajax, Templates, Str, ModalFactory, ModalEvents, RecipientSelector) {    
     'use strict';
 
     /**
@@ -90,7 +90,6 @@ define(['jquery', 'core/log', 'core/ajax','core/templates',
             self.delete(button);
         });
 
-
         self.rootel.on('click touchstart', '.heart', function() {
             var heart = $(this);
 
@@ -135,14 +134,26 @@ define(['jquery', 'core/log', 'core/ajax','core/templates',
 
         // set up infinite scroll
         if(typeof InfiniteScroll != 'undefined') {
-          var infScroll = new InfiniteScroll( '.bapp-list', {
-            // options
-            path: '.next',
-            append: '.post',
-            history: false,
-            status: '.page-load-status',
-          });
+            var infScroll = new InfiniteScroll( '.bapp-list', {
+                // options
+                path: '.next',
+                append: '.post',
+                history: false,
+                status: '.page-load-status',
+            });
         }
+
+        // Initialise the recipient selector.
+        var rc = RecipientSelector.init(self.instanceid);
+        // Remove default handler.
+        rc.rootel.off('click', '.recipient-result');
+        // Set up alternate handler.
+        rc.rootel.on('click', '.recipient-result', function(e) {
+            e.preventDefault();
+            var tag = $(this);
+            var url = rc.rootel.closest('.user-selector').data('action-base') + tag.data('username');
+            window.location.href = url;
+        });
 
     };
 

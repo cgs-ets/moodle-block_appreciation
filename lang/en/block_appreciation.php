@@ -27,15 +27,17 @@ $string['pluginname_desc'] = 'A block that allows users to post a message of tha
 $string['title'] = 'Thank you\'s';
 $string['block_appreciation:addinstance'] = 'Add an "Appreciation" block';
 $string['block_appreciation:edit'] = 'Edit an "Appreciation" block';
+$string['appreciation:addinstance'] = 'Add an "Appreciation" block';
+$string['appreciation:post'] = 'Create a new "Appreciation" post';
+$string['appreciation:view'] = 'View an "Appreciation" block';
 $string['privacy:metadata'] = 'The "Appreciation" block does not store any personal data.';
 $string['add'] = 'Add';
 $string['config:displaynum'] = 'Display number';
-$string['config:displaynumdesc'] = 'Number of most recent posts to display';
 $string['config:approver'] = 'Approver';
-$string['config:approverdesc'] = 'Username of the person in the course that will be approving posts.';
 $string['config:hideblock'] = 'Hide block';
 $string['config:hideblockdesc'] = 'Tick this to hide the block contents from the course. The list can still be accessed via direct link.';
-
+$string['config:weekstartday'] = 'Week start day';
+$string['config:weekstarttime'] = 'Week start time';
 
 $string['postform:postthankyou'] = 'Post a thank you';
 $string['postform:postaddedsuccess'] = 'Your message was successfully added.';
@@ -46,7 +48,11 @@ $string['postform:recipientnoselection'] = 'No selection.';
 $string['postform:erroremptymessage'] = 'Post message cannot be empty';
 
 $string['addnew'] = 'Add new';
-$string['viewunapproved'] = 'View {$a} unapproved';
+$string['list:unapproved'] = '{$a} unapproved';
+$string['list:forme'] = 'For me';
+$string['list:byme'] = 'By me';
+$string['list:thisweek'] = 'This week';
+$string['list:foruser'] = 'For user: {$a}';
 
 $string['list:postunapproved'] = 'This post is not visible to users because approval is pending.';
 $string['list:noposts'] = "No posts found.";

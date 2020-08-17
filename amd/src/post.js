@@ -23,7 +23,7 @@
  */
 
 /**
- * @module block_appreciation/recipientselector/post
+ * @module block_appreciation/post
  */
 define(['jquery', 'block_appreciation/recipientselector', 'core/log', 'core/templates', 'core/form-autocomplete'], 
     function($, RecipientSelector, Log, Templates, AutoComplete) {    

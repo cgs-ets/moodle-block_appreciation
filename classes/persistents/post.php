@@ -83,6 +83,7 @@ class post extends persistent {
         ];
     }
 
+
     /**
      * Get appreciation posts.
      *
@@ -90,8 +91,49 @@ class post extends persistent {
      * @param int $page.
      * @return array.
      */
-    public static function get_for_user($instanceid, $isapprover = 0, $page = 0, $perpage = 0) {
+    public static function get_by_filter($instanceid, $filter = '', $filterval = '', $page = 0, $perpage = 0) {
         global $DB, $USER;
+
+        $posts = array();
+
+        switch ($filter) {
+            case 'unapproved':
+                $posts = static::get_for_approval($instanceid, $page);
+                break;
+            case 'byme':
+                $posts = static::get_by_me($instanceid, $page);
+                break;
+            case 'forme':
+                $posts = static::get_for_me($instanceid, $page);
+                break;
+            case 'foruser':
+                $posts = static::get_for_user($instanceid, $filterval, $page);
+                break;
+            case 'thisweek':
+                $posts = static::get_for_this_week($instanceid, $page);
+                break;
+            default:
+                $posts = static::get_all($instanceid, $page);
+        }
+
+        return $posts;
+    }
+
+    
+
+    /**
+     * Get appreciation posts.
+     *
+     * @param string $instanceid. The block instance id.
+     * @param int $page.
+     * @return array.
+     */
+    public static function get_all($instanceid, $page = 0, $perpage = 0) {
+        global $DB, $USER;
+
+        // Get block config.
+        $blockinstance = $DB->get_record('block_instances', array('id' => $instanceid), '*', MUST_EXIST);
+        $blockconfig = unserialize(base64_decode($blockinstance->configdata));
 
         if (!$perpage) {
             $perpage = APPRECIATION_PERPAGE;
@@ -105,7 +147,8 @@ class post extends persistent {
                     AND deleted = 0 ";
         $params[] = $instanceid;
 
-        if (!$isapprover) {
+        // If not approver.
+        if ($USER->username != $blockconfig->approver) {
             $sql .= " AND (approved = 1 OR creator = ?) ";
             $params[] = $USER->username;
         }
@@ -122,7 +165,6 @@ class post extends persistent {
         return $posts;
     }
 
-
     /**
      * Get appreciation posts that need approval.
      *
@@ -133,6 +175,15 @@ class post extends persistent {
     public static function get_for_approval($instanceid, $page = 0) {
         global $DB, $USER;
 
+        // Get block config.
+        $blockinstance = $DB->get_record('block_instances', array('id' => $instanceid), '*', MUST_EXIST);
+        $blockconfig = unserialize(base64_decode($blockinstance->configdata));
+
+        // Only approver can get this list.
+        if ($blockconfig->approver != $USER->username) {
+            return;
+        }
+
         $perpage = APPRECIATION_PERPAGE;
         $from = $perpage*$page;
 
@@ -141,9 +192,167 @@ class post extends persistent {
                   WHERE instanceid = ? 
                     AND deleted = 0
                     AND approved = 0
-               ORDER BY timemodified DESC";
+               ORDER BY timecreated DESC";
+
+        $params = array($instanceid);
+        $posts = array();
+        $recordset = $DB->get_recordset_sql($sql, $params, $from, $perpage);
+        foreach ($recordset as $record) {
+            $posts[] = new static(0, $record);
+        }
+        $recordset->close();
+     
+        return $posts;
+
+    }
+
+
+    /**
+     * Get appreciation posts made by me.
+     *
+     * @param string $instanceid. The block instance id.
+     * @param int $page.
+     * @return array.
+     */
+    public static function get_by_me($instanceid, $page = 0) {
+        global $DB, $USER;
+
+        $perpage = APPRECIATION_PERPAGE;
+        $from = $perpage*$page;
+
+        $sql = "SELECT *
+                   FROM {block_appreciation_posts}
+                  WHERE instanceid = ? 
+                    AND deleted = 0
+                    AND creator = ?
+               ORDER BY timecreated DESC";
 
         $params = array($instanceid, $USER->username);
+        $posts = array();
+        $recordset = $DB->get_recordset_sql($sql, $params, $from, $perpage);
+        foreach ($recordset as $record) {
+            $posts[] = new static(0, $record);
+        }
+        $recordset->close();
+     
+        return $posts;
+
+    }
+
+    /**
+     * Get appreciation posts made by me.
+     *
+     * @param string $instanceid. The block instance id.
+     * @param int $page.
+     * @return array.
+     */
+    public static function get_for_me($instanceid, $page = 0) {
+        global $DB, $USER;
+
+        $perpage = APPRECIATION_PERPAGE;
+        $from = $perpage*$page;
+
+        $sql = "SELECT *
+                   FROM {block_appreciation_posts}
+                  WHERE instanceid = ? 
+                    AND deleted = 0
+                    AND approved = 1
+                    AND recipient = ?
+               ORDER BY timecreated DESC";
+
+        $params = array($instanceid, $USER->username);
+        $posts = array();
+        $recordset = $DB->get_recordset_sql($sql, $params, $from, $perpage);
+        foreach ($recordset as $record) {
+            $posts[] = new static(0, $record);
+        }
+        $recordset->close();
+     
+        return $posts;
+
+    }
+
+    /**
+     * Get appreciation posts made by me.
+     *
+     * @param string $instanceid. The block instance id.
+     * @param string $username.
+     * @param int $page.
+     * @return array.
+     */
+    public static function get_for_user($instanceid, $username, $page = 0) {
+        global $DB;
+
+        $perpage = APPRECIATION_PERPAGE;
+        $from = $perpage*$page;
+
+        $sql = "SELECT *
+                   FROM {block_appreciation_posts}
+                  WHERE instanceid = ? 
+                    AND deleted = 0
+                    AND approved = 1
+                    AND recipient = ?
+               ORDER BY timecreated DESC";
+
+        $params = array($instanceid, $username);
+        $posts = array();
+        $recordset = $DB->get_recordset_sql($sql, $params, $from, $perpage);
+        foreach ($recordset as $record) {
+            $posts[] = new static(0, $record);
+        }
+        $recordset->close();
+     
+        return $posts;
+
+    }
+
+    /**
+     * Get appreciation posts made this week.
+     *
+     * @param string $instanceid. The block instance id.
+     * @param int $page.
+     * @return array.
+     */
+    public static function get_for_this_week($instanceid, $page = 0) {
+        global $DB, $USER;
+
+        // Get block config.
+        $blockinstance = $DB->get_record('block_instances', array('id' => $instanceid), '*', MUST_EXIST);
+        $blockconfig = unserialize(base64_decode($blockinstance->configdata));
+
+        // Determine the start of this week.
+        $start = 0;
+        if (empty($blockconfig->weekstartday)) {
+            // Default is Sunday 00:00;
+            $start = strtotime('last sunday midnight');
+            if(date('l') == 'Sunday') {
+                $start = strtotime('today midnight');
+            }
+        } else {
+            $days = array(1 => 'Sunday', 2 => 'Monday', 3 => 'Tuesday', 4 => 'Wednesday', 5 => 'Thursday', 6 => 'Friday', 7 => 'Saturday');
+            $start = strtotime('last ' . $days[$blockconfig->weekstartday] . ' ' . $blockconfig->weekstarttime);
+            // If today is the start of the week, determine whether to look forward or back.
+            if(date('l') == $days[$blockconfig->weekstartday]) {
+                $start = strtotime('today ' . $days[$blockconfig->weekstartday] . ' ' . $blockconfig->weekstarttime);
+                // If we have not reached the end of the week yet.
+                if (time() < $start) {
+                    $start = strtotime('last ' . $days[$blockconfig->weekstartday] . ' ' . $blockconfig->weekstarttime);
+                }
+            }
+        }
+
+        $perpage = APPRECIATION_PERPAGE;
+        $from = $perpage*$page;
+
+        $sql = "SELECT *
+                   FROM {block_appreciation_posts}
+                  WHERE instanceid = ? 
+                    AND deleted = 0
+                    AND approved = 1
+                    AND timecreated >= ?
+               ORDER BY timecreated DESC";
+
+        $params = array($instanceid, $start);
         $posts = array();
         $recordset = $DB->get_recordset_sql($sql, $params, $from, $perpage);
         foreach ($recordset as $record) {
