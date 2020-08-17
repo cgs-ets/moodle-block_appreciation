@@ -44,6 +44,7 @@
                 {{^filter.forme}}<a class="dropdown-item filter-forme" href="{{listurl}}&filter=forme">{{#str}} list:forme, block_appreciation {{/str}}</a>{{/filter.forme}}
                 {{^filter.byme}}<a class="dropdown-item filter-byme" href="{{listurl}}&filter=byme">{{#str}} list:byme, block_appreciation {{/str}}</a>{{/filter.byme}}
                 {{^filter.thisweek}}<a class="dropdown-item filter-thisweek" href="{{listurl}}&filter=thisweek">{{#str}} list:thisweek, block_appreciation {{/str}}</a>{{/filter.thisweek}}
+                {{^filter.lastweek}}<a class="dropdown-item filter-lastweek" href="{{listurl}}&filter=lastweek">{{#str}} list:lastweek, block_appreciation {{/str}}</a>{{/filter.lastweek}}
                 {{^filter.unapproved}}{{#isapprover}}{{#numunapproved}}
                     <a class="dropdown-item filter-unapproved" href="{{listurl}}&filter=unapproved">{{#str}} list:unapproved, block_appreciation, {{numunapproved}} {{/str}}</a>
                 {{/numunapproved}}{{/isapprover}}{{/filter.unapproved}}

@@ -105,6 +105,7 @@ $filterlogic->byme = ($filter == 'byme');
 $filterlogic->forme = ($filter == 'forme');
 $filterlogic->foruser = ($filter == 'foruser');
 $filterlogic->thisweek = ($filter == 'thisweek');
+$filterlogic->lastweek = ($filter == 'lastweek');
 $filterlogic->filter = $filter;
 $filterlogic->filterval = $filterval;
 $filtera = ($filterlogic->foruser) ? fullname(\core_user::get_user_by_username($filterval)) : $filterval;

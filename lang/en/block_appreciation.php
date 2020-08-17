@@ -52,6 +52,7 @@ $string['list:unapproved'] = '{$a} unapproved';
 $string['list:forme'] = 'For me';
 $string['list:byme'] = 'By me';
 $string['list:thisweek'] = 'This week';
+$string['list:lastweek'] = 'Last week';
 $string['list:foruser'] = 'Search: {$a}';
 
 $string['list:postunapproved'] = 'This post is not visible to users because approval is pending.';

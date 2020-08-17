@@ -112,6 +112,9 @@ class post extends persistent {
             case 'thisweek':
                 $posts = static::get_for_this_week($instanceid, $page);
                 break;
+            case 'lastweek':
+                $posts = static::get_for_last_week($instanceid, $page);
+                break;
             default:
                 $posts = static::get_all($instanceid, $page);
         }
@@ -353,6 +356,66 @@ class post extends persistent {
                ORDER BY timecreated DESC";
 
         $params = array($instanceid, $start);
+        $posts = array();
+        $recordset = $DB->get_recordset_sql($sql, $params, $from, $perpage);
+        foreach ($recordset as $record) {
+            $posts[] = new static(0, $record);
+        }
+        $recordset->close();
+     
+        return $posts;
+
+    }
+
+    /**
+     * Get appreciation posts made this week.
+     *
+     * @param string $instanceid. The block instance id.
+     * @param int $page.
+     * @return array.
+     */
+    public static function get_for_last_week($instanceid, $page = 0) {
+        global $DB, $USER;
+
+        // Get block config.
+        $blockinstance = $DB->get_record('block_instances', array('id' => $instanceid), '*', MUST_EXIST);
+        $blockconfig = unserialize(base64_decode($blockinstance->configdata));
+
+        // Determine the start of this week.
+        $end = 0;
+        if (empty($blockconfig->weekstartday)) {
+            // Default is Sunday 00:00;
+            $end = strtotime('last sunday midnight');
+            if(date('l') == 'Sunday') {
+                $end = strtotime('today midnight');
+            }
+        } else {
+            $days = array(1 => 'Sunday', 2 => 'Monday', 3 => 'Tuesday', 4 => 'Wednesday', 5 => 'Thursday', 6 => 'Friday', 7 => 'Saturday');
+            $end = strtotime('last ' . $days[$blockconfig->weekstartday] . ' ' . $blockconfig->weekstarttime);
+            // If today is the start of the week, determine whether to look forward or back.
+            if(date('l') == $days[$blockconfig->weekstartday]) {
+                $end = strtotime('today ' . $days[$blockconfig->weekstartday] . ' ' . $blockconfig->weekstarttime);
+                // If we have not reached the end of the week yet.
+                if (time() < $start) {
+                    $end = strtotime('last ' . $days[$blockconfig->weekstartday] . ' ' . $blockconfig->weekstarttime);
+                }
+            }
+        }
+        $start = strtotime("-7 days", $end);
+
+        $perpage = APPRECIATION_PERPAGE;
+        $from = $perpage*$page;
+
+        $sql = "SELECT *
+                   FROM {block_appreciation_posts}
+                  WHERE instanceid = ? 
+                    AND deleted = 0
+                    AND approved = 1
+                    AND timecreated >= ?
+                    AND timecreated < ?
+               ORDER BY timecreated DESC";
+
+        $params = array($instanceid, $start, $end);
         $posts = array();
         $recordset = $DB->get_recordset_sql($sql, $params, $from, $perpage);
         foreach ($recordset as $record) {
