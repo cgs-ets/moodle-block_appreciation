@@ -82,6 +82,7 @@
 .block_appreciation.card,
 #page-blocks-appreciation-list #region-main {
     background-color: #f4f6f8;
+    overflow: visible;
 }
 .block_appreciation .bapp-header {
     text-align: right;
