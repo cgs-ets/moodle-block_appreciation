@@ -294,7 +294,7 @@ class post extends persistent {
                     AND ( recipient = ? OR creator = ? )
                ORDER BY timecreated DESC";
 
-        $params = array($instanceid, $username);
+        $params = array($instanceid, $username, $username);
         $posts = array();
         $recordset = $DB->get_recordset_sql($sql, $params, $from, $perpage);
         foreach ($recordset as $record) {
