@@ -148,7 +148,7 @@ class post extends persistent {
         $params[] = $instanceid;
 
         // If not approver.
-        if (!isset($blockconfig) || !isset($blockconfig->approver) || $USER->username != $blockconfig->approver) {
+        if (!isset($blockconfig->approver) || $USER->username != $blockconfig->approver) {
             $sql .= " AND (approved = 1 OR creator = ?) ";
             $params[] = $USER->username;
         }
@@ -180,7 +180,7 @@ class post extends persistent {
         $blockconfig = unserialize(base64_decode($blockinstance->configdata));
 
         // Only approver can get this list.
-        if (!isset($blockconfig) || !isset($blockconfig->approver) || $blockconfig->approver != $USER->username) {
+        if (!isset($blockconfig->approver) || $blockconfig->approver != $USER->username) {
             return;
         }
 
