@@ -291,7 +291,7 @@ class post extends persistent {
                   WHERE instanceid = ? 
                     AND deleted = 0
                     AND approved = 1
-                    AND recipient = ?
+                    AND ( recipient = ? OR creator = ? )
                ORDER BY timecreated DESC";
 
         $params = array($instanceid, $username);
