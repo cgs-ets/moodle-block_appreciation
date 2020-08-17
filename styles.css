@@ -21,37 +21,60 @@
 }
 
  /* Recipient selector */
-.recipient-selector .recipient-selection {
+#page-blocks-appreciation-post .recipient-selector .recipient-selection,
+.block_appreciation .recipient-selector .recipient-selection {
     margin-bottom: 8px;
     overflow: hidden;
 }
-.recipient-selector .recipient-tag {
+#page-blocks-appreciation-post .recipient-selector .recipient-tag,
+.block_appreciation .recipient-selector .recipient-tag {
     background: #deeaff;
     padding: 8px 12px;
     font-weight: 800;
     display: inline-block;
     cursor: pointer;
 }
-.recipient-selector .recipient-autocomplete {
+#page-blocks-appreciation-post .recipient-selector .recipient-input-wrap,
+.block_appreciation .recipient-selector .recipient-input-wrap {
+    position: relative;
+    max-width: 500px;
+}
+#page-blocks-appreciation-post .recipient-selector .recipient-autocomplete,
+.block_appreciation .recipient-selector .recipient-autocomplete {
     max-width: 500px;
     background-color: #fff;
 }
-.recipient-selector .recipient-results {
+#page-blocks-appreciation-post .recipient-selector .spinner,
+.block_appreciation .recipient-selector .spinner {
+    position: absolute;
+    top: 9px;
+    right: 9px;
+    margin: 0;
+}
+#page-blocks-appreciation-post .recipient-selector.searching .spinner,
+.block_appreciation .recipient-selector.searching .spinner {
+    display: block;
+}
+#page-blocks-appreciation-post .recipient-selector .recipient-results,
+.block_appreciation .recipient-selector .recipient-results {
     display: none;
     max-width: 500px;
     padding: 3px 0;
     border: 1px solid #ccc;
     border-top: 0 none;
 }
-.recipient-selector .recipient-results.active {
+#page-blocks-appreciation-post .recipient-selector .recipient-results.active,
+.block_appreciation .recipient-selector .recipient-results.active {
     display: block;
 }
-.recipient-selector .recipient-result {
+#page-blocks-appreciation-post .recipient-selector .recipient-result,
+.block_appreciation .recipient-selector .recipient-result {
     display: block;
     padding: 3px 11px;
     cursor: pointer;
 }
-.recipient-selector .recipient-result:hover {
+#page-blocks-appreciation-post .recipient-selector .recipient-result:hover,
+.block_appreciation .recipient-selector .recipient-result:hover {
     background: #f2f2f2;
 }
 
@@ -70,9 +93,13 @@
     display: inline-block;
     background: #fff;
     text-align: left;
-    /*position: absolute;
-    right: 170px;
-    z-index: 1000;*/
+    position: relative;
+}
+.block_appreciation .bapp-header .user-selector .recipient-results {
+    position: absolute;
+    z-index: 99;
+    background: #fff;
+    width: 100%;
 }
 .block_appreciation .bapp-header .user-selector .recipient-selection {
     margin: 0;
@@ -214,6 +241,9 @@
 .block_appreciation .bapp-footer a.next {
     display: none;
 }
+.block_appreciation .post.submitting .spinner {
+    display: block;
+}
 
 /* Heart */
 .block_appreciation .bapp-list .post .footer .heart {
@@ -240,6 +270,7 @@
 
 
 /* Spinner */
+#page-blocks-appreciation-post .spinner,
 .block_appreciation .spinner {
     display: none;
     padding: 0;
@@ -248,6 +279,7 @@
     margin-right: 15px;
     margin-top: 5px;
 }
+#page-blocks-appreciation-post .spinner .circle,
 .block_appreciation .spinner .circle {
     display: block;
     position: relative;
@@ -260,9 +292,7 @@
     text-indent: -9999px;
     margin: 0 auto;
 }
-.block_appreciation .post.submitting .spinner {
-    display: block;
-}
+#page-blocks-appreciation-post .spin,
 .block_appreciation .spin {
     -webkit-animation: bappspin 0.4s linear 0s infinite;
     -moz-animation: bappspin 0.4s linear 0s infinite;

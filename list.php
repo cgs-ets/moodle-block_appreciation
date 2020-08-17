@@ -107,7 +107,8 @@ $filterlogic->foruser = ($filter == 'foruser');
 $filterlogic->thisweek = ($filter == 'thisweek');
 $filterlogic->filter = $filter;
 $filterlogic->filterval = $filterval;
-$filterlogic->filterstr =  $filter ? get_string('list:'.$filter, 'block_appreciation', $filterval) : '';
+$filtera = ($filterlogic->foruser) ? fullname(\core_user::get_user_by_username($filterval)) : $filterval;
+$filterlogic->filterstr =  $filter ? get_string('list:'.$filter, 'block_appreciation', $filtera) : '';
 
 // Set up the template data.
 $data = array(

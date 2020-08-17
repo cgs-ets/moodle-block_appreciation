@@ -28,6 +28,13 @@
     <div class="bapp-header">
         <h4 class="filter-title">{{filter.filterstr}}</h4>
 
+        {{^filter.block}}
+            <div class="user-selector" data-action-base="{{listurl}}&filter=foruser&filterval=">
+                <input type="hidden" name="recipient">
+                {{>block_appreciation/recipient_selector_plain}}
+            </div>
+        {{/filter.block}}
+
         <a id="btn-newpost" class="btn btn-primary" href="{{addnewurl}}">{{#str}} addnew, block_appreciation {{/str}}</a>
 
         <div class="filter dropdown">
@@ -40,12 +47,6 @@
                 {{^filter.unapproved}}{{#isapprover}}{{#numunapproved}}
                     <a class="dropdown-item filter-unapproved" href="{{listurl}}&filter=unapproved">{{#str}} list:unapproved, block_appreciation, {{numunapproved}} {{/str}}</a>
                 {{/numunapproved}}{{/isapprover}}{{/filter.unapproved}}
-                {{^filter.block}}
-                    <div class="user-selector dropdown-item" data-action-base="{{listurl}}&filter=foruser&filterval=">
-                        <input type="hidden" name="recipient">
-                        {{>block_appreciation/recipient_selector_plain}}
-                    </div>
-                {{/filter.block}}
             </div>
         </div>
     </div>

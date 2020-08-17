@@ -25,7 +25,10 @@
 }}
 <div class="recipient-selector">
     <div class="recipient-selection"></div>
-    <input type="text" name="recipient-autocomplete" class="form-control recipient-autocomplete" placeholder="{{#str}}postform:recipientplaceholder, block_appreciation{{/str}}" aria-expanded="false" autocomplete="off" autocorrect="off" autocapitalize="off" aria-autocomplete="list">
+    <div class="recipient-input-wrap">
+        <input type="text" name="recipient-autocomplete" class="form-control recipient-autocomplete" placeholder="{{#str}}postform:recipientplaceholder, block_appreciation{{/str}}" aria-expanded="false" autocomplete="off" autocorrect="off" autocapitalize="off" aria-autocomplete="list">
+        <div class="spinner"><div class="circle spin"></div></div>
+    </div>
     <div class="recipient-results">
         {{>block_appreciation/recipient_selector_results}}
     </div>

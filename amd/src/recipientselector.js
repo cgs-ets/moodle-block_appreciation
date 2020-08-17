@@ -81,9 +81,13 @@ define(['jquery', 'core/log', 'core/ajax', 'core/templates', 'core/str'], functi
         self.rootel.on('keyup', '.recipient-autocomplete', function(e) {
             clearTimeout(keytimer);
             var autocomplete = $(this);
-            keytimer = setTimeout(function () {
+            if (e.which == 13) {
                 self.search(autocomplete);
-            }, 500);
+            } else {
+                keytimer = setTimeout(function () {
+                    self.search(autocomplete);
+                }, 500);
+            }
         });
 
         // Handle search result click.
@@ -193,6 +197,8 @@ define(['jquery', 'core/log', 'core/ajax', 'core/templates', 'core/str'], functi
             return;
         }
 
+        self.rootel.addClass('searching');
+
         Ajax.call([{
             methodname: 'block_appreciation_get_recipient_users',
             args: { 
@@ -200,6 +206,7 @@ define(['jquery', 'core/log', 'core/ajax', 'core/templates', 'core/str'], functi
                 query: searchel.val() 
             },
             done: function(response) {
+                self.rootel.removeClass('searching');
                 if (response.length) {
                     self.hasresults = true;
                     // Render the results.
@@ -216,6 +223,7 @@ define(['jquery', 'core/log', 'core/ajax', 'core/templates', 'core/str'], functi
                 }
             },
             fail: function(reason) {
+                self.rootel.removeClass('searching');
                 Log.error('block_appreciation/recipientselector: failed to search.');
                 Log.debug(reason);
             }
