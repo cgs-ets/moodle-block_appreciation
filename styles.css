@@ -166,9 +166,9 @@
     overflow: hidden;
 }
 .block_appreciation .bapp-list .post .creator .fullname:after {
-    content: "▸";
-    margin-left: 10px;
-    margin-right: 10px;
+    content: "to";
+    margin-left: 9px;
+    margin-right: 7px;
     color: #000;
 }
 .block_appreciation .bapp-list .post .header .meta {
