@@ -79,6 +79,10 @@
 }
 
 /* List */
+.block_appreciation {
+  padding: 20px;
+  background: #f2f4f6;
+}
 .block_appreciation.card,
 #page-blocks-appreciation-list #region-main {
     overflow: visible;
