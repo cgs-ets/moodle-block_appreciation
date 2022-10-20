@@ -134,13 +134,14 @@ define(['jquery', 'core/log', 'core/ajax','core/templates',
 
         // set up infinite scroll
         if(typeof InfiniteScroll != 'undefined') {
-            var infScroll = new InfiniteScroll( '.bapp-list', {
-                // options
-                path: '.next',
-                append: '.post',
-                history: false,
-                status: '.page-load-status',
-            });
+          var infScroll = new InfiniteScroll( '.bapp-list', {
+            // options
+            path: '.next',
+            append: '.post',
+            history: false,
+            status: '.page-load-status',
+            elementScroll: '#page',
+          });
         }
 
         // Initialise the recipient selector.
